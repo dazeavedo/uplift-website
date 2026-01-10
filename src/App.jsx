@@ -3063,6 +3063,309 @@ const videoTimeline = [
 const totalDuration = videoTimeline.reduce((acc, item) => acc + item.duration, 0);
 
 // ============================================================================
+// ROI CALCULATOR COMPONENT
+// ============================================================================
+const ROICalculator = () => {
+  const [headcount, setHeadcount] = useState(250);
+  const [turnoverRate, setTurnoverRate] = useState(60);
+  const [costPerHire, setCostPerHire] = useState(3000);
+  const [showResults, setShowResults] = useState(false);
+  
+  // Calculations
+  const annualLeavers = Math.round(headcount * (turnoverRate / 100));
+  const currentCost = annualLeavers * costPerHire;
+  const projectedReduction = 0.30; // 30% reduction target
+  const savedHires = Math.round(annualLeavers * projectedReduction);
+  const annualSavings = savedHires * costPerHire;
+  
+  // Uplift cost estimate
+  const getTier = () => {
+    if (headcount < 50) return null;
+    if (headcount <= 250) return { name: 'Growth', rate: 10, fullRate: 15 };
+    if (headcount <= 750) return { name: 'Scale', rate: 8, fullRate: 12 };
+    return { name: 'Enterprise', rate: null, fullRate: null };
+  };
+  
+  const tier = getTier();
+  const annualUpliftCost = tier && tier.rate ? headcount * tier.rate * 12 : null;
+  const netSavings = annualUpliftCost ? annualSavings - annualUpliftCost : annualSavings;
+  const roi = annualUpliftCost ? Math.round((netSavings / annualUpliftCost) * 100) : null;
+  
+  const handleCalculate = () => {
+    setShowResults(true);
+  };
+  
+  const generatePDF = () => {
+    // Create printable content
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Uplift ROI Analysis</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+          h1 { color: #FF6B35; }
+          h2 { color: #0F172A; border-bottom: 2px solid #FF6B35; padding-bottom: 8px; }
+          .metric { background: #F8FAFC; padding: 20px; margin: 10px 0; border-radius: 8px; }
+          .metric-value { font-size: 32px; font-weight: bold; color: #0F172A; }
+          .metric-label { color: #64748B; font-size: 14px; }
+          .highlight { background: #FFF7ED; border-left: 4px solid #FF6B35; padding: 20px; margin: 20px 0; }
+          .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+          .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E2E8F0; color: #64748B; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <h1>Uplift ROI Analysis</h1>
+        <p>Prepared for your organisation • ${new Date().toLocaleDateString()}</p>
+        
+        <h2>Your Current Situation</h2>
+        <div class="grid">
+          <div class="metric">
+            <div class="metric-value">${headcount}</div>
+            <div class="metric-label">Total headcount</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">${turnoverRate}%</div>
+            <div class="metric-label">Annual turnover rate</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">£${costPerHire.toLocaleString()}</div>
+            <div class="metric-label">Cost per hire</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">${annualLeavers}</div>
+            <div class="metric-label">Estimated annual leavers</div>
+          </div>
+        </div>
+        
+        <div class="highlight">
+          <div class="metric-label">Current annual turnover cost</div>
+          <div class="metric-value">£${currentCost.toLocaleString()}</div>
+        </div>
+        
+        <h2>Projected Impact with Uplift</h2>
+        <div class="grid">
+          <div class="metric">
+            <div class="metric-value">30%</div>
+            <div class="metric-label">Target turnover reduction</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">${savedHires}</div>
+            <div class="metric-label">Fewer hires needed</div>
+          </div>
+        </div>
+        
+        <div class="highlight">
+          <div class="metric-label">Projected annual savings</div>
+          <div class="metric-value" style="color: #10B981;">£${annualSavings.toLocaleString()}</div>
+        </div>
+        
+        ${tier ? `
+        <h2>Investment & Return</h2>
+        <div class="grid">
+          <div class="metric">
+            <div class="metric-value">${tier.name}</div>
+            <div class="metric-label">Recommended tier</div>
+          </div>
+          ${annualUpliftCost ? `
+          <div class="metric">
+            <div class="metric-value">£${annualUpliftCost.toLocaleString()}/yr</div>
+            <div class="metric-label">Uplift investment (design partner rate)</div>
+          </div>
+          ` : ''}
+        </div>
+        ${netSavings ? `
+        <div class="highlight" style="background: #DCFCE7; border-color: #10B981;">
+          <div class="metric-label">Net annual savings</div>
+          <div class="metric-value" style="color: #10B981;">£${netSavings.toLocaleString()}</div>
+          ${roi ? `<div class="metric-label" style="margin-top: 8px;">${roi}% ROI</div>` : ''}
+        </div>
+        ` : ''}
+        ` : ''}
+        
+        <h2>Next Steps</h2>
+        <ol>
+          <li>Book a 30-minute discovery call</li>
+          <li>Start your 30-day pilot (1 location, up to 50 users)</li>
+          <li>See real results with your own team</li>
+        </ol>
+        
+        <div class="footer">
+          <p><strong>Uplift</strong> — Workforce intelligence for frontline teams</p>
+          <p>Book a call: calendly.com/dazevedo-uplifthq/30min</p>
+          <p>This analysis is based on industry benchmarks and your provided inputs. Actual results may vary.</p>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.print();
+  };
+  
+  return (
+    <div>
+      {/* Input Section */}
+      <div className="roi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '32px' }}>
+        <div>
+          <label style={{ display: 'block', color: '#94A3B8', fontSize: '13px', marginBottom: '8px' }}>
+            Total headcount
+          </label>
+          <input
+            type="number"
+            value={headcount}
+            onChange={(e) => { setHeadcount(Number(e.target.value)); setShowResults(false); }}
+            style={{
+              width: '100%',
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '8px',
+              padding: '14px 16px',
+              color: 'white',
+              fontSize: '18px',
+              fontWeight: 600
+            }}
+          />
+        </div>
+        <div>
+          <label style={{ display: 'block', color: '#94A3B8', fontSize: '13px', marginBottom: '8px' }}>
+            Annual turnover rate (%)
+          </label>
+          <input
+            type="number"
+            value={turnoverRate}
+            onChange={(e) => { setTurnoverRate(Number(e.target.value)); setShowResults(false); }}
+            style={{
+              width: '100%',
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '8px',
+              padding: '14px 16px',
+              color: 'white',
+              fontSize: '18px',
+              fontWeight: 600
+            }}
+          />
+        </div>
+        <div>
+          <label style={{ display: 'block', color: '#94A3B8', fontSize: '13px', marginBottom: '8px' }}>
+            Cost per hire (£)
+          </label>
+          <input
+            type="number"
+            value={costPerHire}
+            onChange={(e) => { setCostPerHire(Number(e.target.value)); setShowResults(false); }}
+            style={{
+              width: '100%',
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '8px',
+              padding: '14px 16px',
+              color: 'white',
+              fontSize: '18px',
+              fontWeight: 600
+            }}
+          />
+        </div>
+      </div>
+      
+      {/* Calculate Button */}
+      {!showResults && (
+        <div style={{ textAlign: 'center' }}>
+          <button
+            onClick={handleCalculate}
+            disabled={headcount < 50}
+            style={{
+              background: headcount < 50 ? '#475569' : '#FF6B35',
+              color: 'white',
+              border: 'none',
+              padding: '16px 48px',
+              borderRadius: '12px',
+              fontSize: '16px',
+              fontWeight: 600,
+              cursor: headcount < 50 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {headcount < 50 ? 'Minimum 50 users required' : 'Calculate my ROI'}
+          </button>
+        </div>
+      )}
+      
+      {/* Results Section */}
+      {showResults && headcount >= 50 && (
+        <div style={{ animation: 'fadeIn 0.5s ease' }}>
+          {/* Results Grid */}
+          <div className="roi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>Annual leavers</p>
+              <p style={{ color: 'white', fontSize: '28px', fontWeight: 700, margin: '4px 0' }}>{annualLeavers}</p>
+              <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>at {turnoverRate}% turnover</p>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>Current cost</p>
+              <p style={{ color: '#EF4444', fontSize: '28px', fontWeight: 700, margin: '4px 0' }}>£{currentCost.toLocaleString()}</p>
+              <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>per year</p>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>Potential savings</p>
+              <p style={{ color: '#10B981', fontSize: '28px', fontWeight: 700, margin: '4px 0' }}>£{annualSavings.toLocaleString()}</p>
+              <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>with 30% reduction</p>
+            </div>
+            <div style={{ background: 'rgba(16,185,129,0.1)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(16,185,129,0.3)' }}>
+              <p style={{ color: '#10B981', fontSize: '12px', margin: 0 }}>Net ROI</p>
+              <p style={{ color: '#10B981', fontSize: '28px', fontWeight: 700, margin: '4px 0' }}>{roi ? `${roi}%` : 'POA'}</p>
+              <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>{tier?.name} tier</p>
+            </div>
+          </div>
+          
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+            <button
+              onClick={generatePDF}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'rgba(255,255,255,0.1)',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.2)',
+                padding: '14px 24px',
+                borderRadius: '10px',
+                fontSize: '15px',
+                fontWeight: 500,
+                cursor: 'pointer'
+              }}
+            >
+              <FileCheck size={18} /> Download PDF
+            </button>
+            <button
+              onClick={() => window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: '#FF6B35',
+                color: 'white',
+                border: 'none',
+                padding: '14px 24px',
+                borderRadius: '10px',
+                fontSize: '15px',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              <Calendar size={18} /> Book a Call
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================================================
 // EMBEDDED DEMO PREVIEW (Inline autoplay version)
 // ============================================================================
 const EmbeddedDemoPreview = () => {
@@ -3126,14 +3429,14 @@ const EmbeddedDemoPreview = () => {
         filter: 'blur(80px)'
       }} />
       
-      {/* Screen Container */}
+      {/* Screen Container - scaled to show full phone */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         gap: '60px',
         opacity: fade ? 1 : 0,
         transition: 'opacity 0.3s ease',
-        transform: 'scale(0.85)'
+        transform: 'scale(0.72)'
       }}>
         {/* Label */}
         <div style={{ width: '200px', textAlign: 'right' }}>
@@ -3993,7 +4296,7 @@ export default function UpliftWebsite() {
             </h1>
             
             <p style={{ fontSize: '20px', color: '#CBD5E1', marginBottom: '16px', lineHeight: 1.6 }}>
-              The career platform for frontline workers. Show your people where they can go — and watch them stay.
+              Workforce intelligence for frontline teams. Show your people where they can go — and watch them stay.
             </p>
             
             <p style={{ fontSize: '16px', color: '#94A3B8', marginBottom: '32px' }}>
@@ -4039,7 +4342,7 @@ export default function UpliftWebsite() {
             {/* Floating notification */}
             <div className="float-delayed" style={{
               position: 'absolute',
-              right: '-20px',
+              right: '40px',
               top: '30%',
               background: 'white',
               borderRadius: '12px',
@@ -4132,7 +4435,7 @@ export default function UpliftWebsite() {
           </div>
           
           <p style={{ color: '#64748B', fontSize: '14px', marginTop: '20px' }}>
-            Click to watch the full 90-second tour
+            Click to watch the full tour
           </p>
         </div>
         
@@ -4455,39 +4758,18 @@ export default function UpliftWebsite() {
       {/* ROI SECTION */}
       {/* ================================================================== */}
       <section style={{ padding: '80px 0', background: '#F8FAFC' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', borderRadius: '24px', padding: '48px', display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '48px', alignItems: 'center' }}>
-            <div>
-              <h3 style={{ fontSize: '32px', fontWeight: 700, color: 'white', marginBottom: '16px' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', borderRadius: '24px', padding: '48px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <h3 style={{ fontSize: '32px', fontWeight: 700, color: 'white', marginBottom: '12px' }}>
                 Calculate your ROI
               </h3>
-              <p style={{ fontSize: '16px', color: '#94A3B8', marginBottom: '24px', lineHeight: 1.6 }}>
-                See the potential savings from reduced turnover, faster internal hiring, and automated scheduling. 
-                Get a custom business case for your leadership team.
+              <p style={{ fontSize: '16px', color: '#94A3B8' }}>
+                See how much you could save with Uplift
               </p>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FF6B35', color: 'white', border: 'none', padding: '14px 24px', borderRadius: '10px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
-                  <BarChart3 size={18} /> Get ROI Analysis
-                </button>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '14px 24px', borderRadius: '10px', fontSize: '15px', fontWeight: 500, cursor: 'pointer' }}>
-                  Download PDF
-                </button>
-              </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              {[
-                { label: 'Cost per hire', value: '£3,000', desc: 'Industry average' },
-                { label: 'Turnover rate', value: '60%', desc: 'Frontline average' },
-                { label: 'Time to fill', value: '42 days', desc: 'External hire' },
-                { label: 'Internal fill', value: '14 days', desc: 'With Uplift' }
-              ].map((item, i) => (
-                <div key={i} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>{item.label}</p>
-                  <p style={{ color: 'white', fontSize: '24px', fontWeight: 700, margin: '4px 0' }}>{item.value}</p>
-                  <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
+            
+            <ROICalculator />
           </div>
         </div>
       </section>
@@ -4497,54 +4779,82 @@ export default function UpliftWebsite() {
       {/* ================================================================== */}
       <section id="pricing" style={{ padding: '120px 0', background: '#0F172A' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
+          
+          {/* Trial Banner */}
+          <div style={{ 
+            background: 'linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.05) 100%)', 
+            border: '1px solid rgba(16,185,129,0.3)', 
+            borderRadius: '16px', 
+            padding: '24px 32px', 
+            marginBottom: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px'
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <CheckCircle2 size={20} color="#10B981" />
+                <span style={{ color: '#10B981', fontWeight: 700, fontSize: '16px' }}>30-Day Pilot</span>
+              </div>
+              <p style={{ color: '#94A3B8', fontSize: '14px', margin: 0 }}>
+                Full platform • 1 location • Up to 50 users
+              </p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ color: 'white', fontWeight: 600, fontSize: '14px', margin: 0 }}>Pilot setup from £2,500</p>
+              <p style={{ color: '#64748B', fontSize: '12px', margin: '4px 0 0' }}>Credited to annual contract</p>
+            </div>
+          </div>
+          
+          {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,107,53,0.2)', color: '#FF6B35', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 600 }}>
-              <Zap size={16} /> First 10 Customers — Lock In Forever Pricing
+              <Zap size={16} /> Design Partner Pricing — Lock In Forever
             </div>
             <h2 style={{ fontSize: '40px', fontWeight: 700, color: 'white', marginBottom: '16px' }}>
-              Simple, transparent pricing
+              Full platform. Pick your team size.
             </h2>
             <p style={{ fontSize: '18px', color: '#94A3B8' }}>
-              Per-user licensing. First 10 design partners get discounted rates locked in forever.
+              Every plan includes all features. No add-ons. No surprises.
             </p>
           </div>
           
+          {/* Pricing Cards */}
           <div className="pricing-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
             {[
               { 
-                name: 'Starter', 
-                originalPrice: '£6',
-                price: '£4', 
+                name: 'Growth', 
+                headcount: '50-250 users',
+                originalPrice: '£15',
+                price: '£10', 
                 period: '/user/month',
-                desc: 'Essential features',
+                flexPrice: '£12/user',
                 savings: 'Save 33%',
-                implementation: '2-4 weeks • From £2,500',
-                features: ['Career paths', 'Job postings', 'Skills tracking', 'Basic analytics', 'Mobile app'], 
-                cta: 'Try Demo', 
+                pilotFee: '£2,500',
                 primary: false 
               },
               { 
-                name: 'Professional', 
+                name: 'Scale', 
+                headcount: '251-750 users',
                 originalPrice: '£12',
                 price: '£8', 
                 period: '/user/month',
-                desc: 'Full platform',
+                flexPrice: '£10/user',
                 savings: 'Save 33%',
-                implementation: '4-6 weeks • From £7,500',
-                features: ['Everything in Starter', 'AI scheduling', 'Advanced analytics', 'Shift marketplace', 'Integrations', 'SSO'], 
-                cta: 'Try Demo', 
+                pilotFee: '£5,000',
                 primary: true 
               },
               { 
                 name: 'Enterprise', 
-                originalPrice: '£20',
-                price: '£13', 
-                period: '/user/month',
-                desc: 'Full customisation',
-                savings: 'Save 35%',
-                implementation: '6-10 weeks • Custom scope',
-                features: ['Everything in Professional', 'Multi-location', 'Custom integrations', 'Dedicated CSM', 'SLA guarantee', 'On-site training'], 
-                cta: 'Talk to Sales', 
+                headcount: '750+ users',
+                originalPrice: null,
+                price: 'POA', 
+                period: '',
+                flexPrice: 'Custom',
+                savings: 'Custom pricing',
+                pilotFee: 'From £10,000',
                 primary: false 
               }
             ].map((tier, i) => (
@@ -4558,25 +4868,49 @@ export default function UpliftWebsite() {
                 {tier.primary && (
                   <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: '#FF6B35', color: 'white', fontSize: '12px', fontWeight: 600, padding: '4px 12px', borderRadius: '9999px' }}>Most Popular</div>
                 )}
-                <h3 style={{ color: 'white', fontSize: '20px', fontWeight: 600, marginBottom: '4px' }}>{tier.name}</h3>
-                <p style={{ color: '#64748B', fontSize: '14px', marginBottom: '16px' }}>{tier.desc}</p>
-                <div style={{ marginBottom: '4px' }}>
-                  <span style={{ color: '#64748B', fontSize: '18px', textDecoration: 'line-through', marginRight: '8px' }}>{tier.originalPrice}</span>
-                  <span style={{ color: 'white', fontSize: '40px', fontWeight: 700 }}>{tier.price}</span>
+                <h3 style={{ color: 'white', fontSize: '24px', fontWeight: 700, marginBottom: '4px' }}>{tier.name}</h3>
+                <p style={{ color: '#FF6B35', fontSize: '14px', fontWeight: 600, marginBottom: '20px' }}>{tier.headcount}</p>
+                
+                <div style={{ marginBottom: '8px' }}>
+                  {tier.originalPrice && (
+                    <span style={{ color: '#64748B', fontSize: '18px', textDecoration: 'line-through', marginRight: '8px' }}>{tier.originalPrice}</span>
+                  )}
+                  <span style={{ color: 'white', fontSize: '44px', fontWeight: 700 }}>{tier.price}</span>
                   <span style={{ color: '#94A3B8', fontSize: '16px' }}>{tier.period}</span>
                 </div>
-                <div style={{ display: 'inline-block', background: 'rgba(16,185,129,0.2)', color: '#10B981', fontSize: '12px', fontWeight: 600, padding: '4px 10px', borderRadius: '6px', marginBottom: '12px' }}>{tier.savings}</div>
-                <p style={{ color: '#64748B', fontSize: '13px', marginBottom: '24px' }}>{tier.implementation}</p>
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px' }}>
-                  {tier.features.map((f, j) => (
-                    <li key={j} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#CBD5E1', fontSize: '14px', marginBottom: '10px' }}>
-                      <Check size={16} color={tier.primary ? '#FF6B35' : '#10B981'} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+                
+                {tier.originalPrice && (
+                  <div style={{ display: 'inline-block', background: 'rgba(16,185,129,0.2)', color: '#10B981', fontSize: '12px', fontWeight: 600, padding: '4px 10px', borderRadius: '6px', marginBottom: '20px' }}>{tier.savings} forever</div>
+                )}
+                {!tier.originalPrice && (
+                  <div style={{ display: 'inline-block', background: 'rgba(255,107,53,0.2)', color: '#FF6B35', fontSize: '12px', fontWeight: 600, padding: '4px 10px', borderRadius: '6px', marginBottom: '20px' }}>{tier.savings}</div>
+                )}
+                
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', marginBottom: '24px' }}>
+                  <p style={{ color: '#94A3B8', fontSize: '13px', margin: '0 0 12px' }}>Includes:</p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {['Full platform access', 'AI scheduling', 'Career pathing', 'Skills matrix', 'Mobile app', 'All integrations', 'Analytics & reporting'].map((f, j) => (
+                      <li key={j} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#CBD5E1', fontSize: '13px', marginBottom: '8px' }}>
+                        <Check size={14} color="#10B981" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '6px' }}>
+                    <span style={{ color: '#64748B' }}>Flex users</span>
+                    <span style={{ color: '#94A3B8', fontWeight: 500 }}>{tier.flexPrice}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                    <span style={{ color: '#64748B' }}>Pilot setup</span>
+                    <span style={{ color: '#94A3B8', fontWeight: 500 }}>{tier.pilotFee}</span>
+                  </div>
+                </div>
+                
                 <button 
-                  onClick={() => tier.cta === 'Talk to Sales' ? window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank') : setShowWaitlist(true)}
+                  onClick={() => window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank')}
                   style={{
                   width: '100%',
                   background: tier.primary ? '#FF6B35' : 'white',
@@ -4586,17 +4920,52 @@ export default function UpliftWebsite() {
                   padding: '14px',
                   fontWeight: 600,
                   fontSize: '14px',
-                  cursor: 'pointer'
-                }}>{tier.cta}</button>
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}>
+                  <Calendar size={16} /> Book a Call
+                </button>
               </div>
             ))}
           </div>
           
-          {/* Design Partner Note */}
-          <div style={{ textAlign: 'center', marginTop: '40px', padding: '24px', background: 'rgba(255,107,53,0.1)', borderRadius: '12px', border: '1px solid rgba(255,107,53,0.2)' }}>
-            <p style={{ color: 'white', fontWeight: 600, marginBottom: '8px', fontSize: '16px' }}>Design Partner Program</p>
-            <p style={{ color: '#CBD5E1', fontSize: '14px', margin: 0 }}>First 10 customers lock in these discounted rates <strong style={{ color: 'white' }}>forever</strong>. Currently <strong style={{ color: '#FF6B35' }}>7 spots remaining</strong>.</p>
+          {/* Flex Pricing Explanation */}
+          <div style={{ 
+            marginTop: '32px', 
+            padding: '20px 24px', 
+            background: 'rgba(255,255,255,0.05)', 
+            borderRadius: '12px', 
+            border: '1px solid rgba(255,255,255,0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px'
+          }}>
+            <div>
+              <p style={{ color: 'white', fontWeight: 600, fontSize: '15px', margin: '0 0 4px' }}>
+                <Users size={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                Seasonal staff? Base + Flex pricing available.
+              </p>
+              <p style={{ color: '#64748B', fontSize: '13px', margin: 0 }}>
+                Add temporary users at £2/user premium. No commitment. Billed monthly.
+              </p>
+            </div>
           </div>
+          
+          {/* Design Partner Note */}
+          <div style={{ textAlign: 'center', marginTop: '32px', padding: '24px', background: 'rgba(255,107,53,0.1)', borderRadius: '12px', border: '1px solid rgba(255,107,53,0.2)' }}>
+            <p style={{ color: 'white', fontWeight: 600, marginBottom: '8px', fontSize: '16px' }}>Design Partner Program</p>
+            <p style={{ color: '#CBD5E1', fontSize: '14px', margin: 0 }}>First 10 customers lock in discounted rates <strong style={{ color: 'white' }}>forever</strong>. Currently <strong style={{ color: '#FF6B35' }}>7 spots remaining</strong>.</p>
+          </div>
+          
+          {/* Minimum Users Note */}
+          <p style={{ textAlign: 'center', marginTop: '24px', color: '#64748B', fontSize: '13px' }}>
+            Team under 50? <span style={{ color: '#94A3B8', cursor: 'pointer' }} onClick={() => setShowWaitlist(true)}>Get in touch</span> — we'll notify you when we have something for smaller teams.
+          </p>
         </div>
       </section>
       
@@ -4632,7 +5001,7 @@ export default function UpliftWebsite() {
             <div>
               <RisingULogo color="light" />
               <p style={{ color: '#64748B', fontSize: '14px', marginTop: '16px', maxWidth: '300px' }}>
-                The career platform for frontline workers. Show your people where they can go.
+                The workforce intelligence platform for frontline teams. Show your people where they can go.
               </p>
             </div>
             
