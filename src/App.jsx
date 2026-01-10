@@ -4364,7 +4364,7 @@ export default function UpliftWebsite() {
         </div>
         
         {/* Inline Demo Preview */}
-        <div style={{ 
+        <div id="platform" style={{ 
           maxWidth: '1100px', 
           margin: '0 auto', 
           padding: '32px 24px 80px',
