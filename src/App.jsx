@@ -1328,7 +1328,7 @@ const PortalIntegrations = () => (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
             <h1 style={{ fontSize: '18px', fontWeight: 600, color: '#0F172A', margin: 0 }}>Integrations</h1>
-            <p style={{ color: '#64748B', fontSize: '12px', marginTop: '2px' }}>25+ integrations available</p>
+            <p style={{ color: '#64748B', fontSize: '12px', marginTop: '2px' }}>12 integrations live</p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button style={{ background: 'white', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '8px 14px', fontWeight: 500, fontSize: '12px', cursor: 'pointer' }}>API Docs</button>
@@ -4310,7 +4310,7 @@ export default function UpliftWebsite() {
                   { icon: Brain, label: 'AI scheduler' },
                   { icon: Award, label: 'Skills matrix' },
                   { icon: Target, label: 'Career pathways' },
-                  { icon: Link2, label: '25+ integrations' },
+                  { icon: Link2, label: '12 integrations' },
                   { icon: Shield, label: 'Enterprise security' }
                 ].map((item, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -4401,45 +4401,43 @@ export default function UpliftWebsite() {
               </h2>
               
               <p style={{ fontSize: '18px', color: '#475569', marginBottom: '32px', lineHeight: 1.6 }}>
-                Growing integration library plus REST API for custom connections. 
-                Tell us what you need — we build fast.
+                12 integrations live and ready. Plus REST API for custom connections.
               </p>
               
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                 {[
-                  { category: 'LIVE', items: [
-                    { name: 'Slack', live: true },
-                    { name: 'Teams', live: true },
-                    { name: 'Google SSO', live: true },
-                    { name: 'REST API', live: true }
+                  { category: 'COMMS', items: [
+                    { name: 'Slack' },
+                    { name: 'Microsoft Teams' }
                   ]},
-                  { category: 'Q1 2026', items: [
-                    { name: 'BambooHR', live: false },
-                    { name: 'HiBob', live: false },
-                    { name: 'Okta', live: false },
-                    { name: 'Azure AD', live: false }
+                  { category: 'IDENTITY', items: [
+                    { name: 'Google SSO' },
+                    { name: 'Okta' }
                   ]},
-                  { category: 'Q2 2026', items: [
-                    { name: 'Workday', live: false },
-                    { name: 'ADP', live: false },
-                    { name: 'Sage', live: false }
+                  { category: 'HRIS', items: [
+                    { name: 'BambooHR' },
+                    { name: 'HiBob' },
+                    { name: 'Personio' },
+                    { name: 'Sage HR' }
                   ]},
-                  { category: 'ON REQUEST', items: [
-                    { name: 'Custom builds', live: false },
-                    { name: 'NHS ESR', live: false }
+                  { category: 'PAYROLL & POS', items: [
+                    { name: 'Gusto' },
+                    { name: 'Xero' },
+                    { name: 'Square' },
+                    { name: 'REST API' }
                   ]}
                 ].map((cat, i) => (
                   <div key={i} style={{ background: '#F8FAFC', borderRadius: '12px', padding: '16px', border: '1px solid #E2E8F0' }}>
-                    <p style={{ fontWeight: 600, fontSize: '12px', color: cat.category === 'LIVE' ? '#10B981' : '#64748B', marginBottom: '8px' }}>{cat.category}</p>
+                    <p style={{ fontWeight: 600, fontSize: '12px', color: '#10B981', marginBottom: '8px' }}>{cat.category}</p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {cat.items.map((item, j) => (
                         <span key={j} style={{ 
-                          background: item.live ? '#DCFCE7' : 'white', 
+                          background: '#DCFCE7', 
                           padding: '4px 10px', 
                           borderRadius: '6px', 
                           fontSize: '12px', 
-                          color: item.live ? '#166534' : '#334155', 
-                          border: item.live ? '1px solid #BBF7D0' : '1px solid #E2E8F0' 
+                          color: '#166534', 
+                          border: '1px solid #BBF7D0' 
                         }}>{item.name}</span>
                       ))}
                     </div>
@@ -4578,7 +4576,7 @@ export default function UpliftWebsite() {
                   ))}
                 </ul>
                 <button 
-                  onClick={() => tier.cta === 'Talk to Sales' ? window.open('mailto:hello@uplifthq.co.uk?subject=Enterprise Enquiry', '_blank') : setShowWaitlist(true)}
+                  onClick={() => tier.cta === 'Talk to Sales' ? window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank') : setShowWaitlist(true)}
                   style={{
                   width: '100%',
                   background: tier.primary ? '#FF6B35' : 'white',
