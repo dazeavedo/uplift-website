@@ -4004,7 +4004,7 @@ export default function UpliftWebsite() {
               <button onClick={() => setShowWaitlist(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FF6B35', color: 'white', border: 'none', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 700, cursor: 'pointer' }}>
                 Try Demo <ArrowRight size={20} />
               </button>
-              <button onClick={() => window.open('mailto:hello@uplifthq.co.uk?subject=Book a Call', '_blank')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 600, cursor: 'pointer' }}>
                 <Calendar size={20} /> Book a Call
               </button>
             </div>
@@ -4618,7 +4618,7 @@ export default function UpliftWebsite() {
             <button onClick={() => setShowWaitlist(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FF6B35', color: 'white', border: 'none', padding: '18px 36px', borderRadius: '12px', fontSize: '18px', fontWeight: 700, cursor: 'pointer' }}>
               Try Demo <ArrowRight size={20} />
             </button>
-            <button onClick={() => window.open('mailto:hello@uplifthq.co.uk?subject=Book a Call', '_blank')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '18px 36px', borderRadius: '12px', fontSize: '18px', fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '18px 36px', borderRadius: '12px', fontSize: '18px', fontWeight: 600, cursor: 'pointer' }}>
               <Calendar size={20} /> Book a Call
             </button>
           </div>
@@ -4831,7 +4831,7 @@ export default function UpliftWebsite() {
                     onClick={() => {
                       setShowWaitlist(false);
                       // Open Calendly or contact form
-                      window.open('mailto:hello@uplifthq.co.uk?subject=Book a Call', '_blank');
+                      window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank');
                     }}
                     style={{
                       flex: 1,
