@@ -3430,7 +3430,7 @@ const EmbeddedDemoPreview = () => {
       }} />
       
       {/* Screen Container - scaled to show full phone */}
-      <div style={{
+      <div className="demo-screen-container" style={{
         display: 'flex',
         alignItems: 'center',
         gap: '60px',
@@ -3439,7 +3439,7 @@ const EmbeddedDemoPreview = () => {
         transform: 'scale(0.72)'
       }}>
         {/* Label */}
-        <div style={{ width: '200px', textAlign: 'right' }}>
+        <div className="demo-label" style={{ width: '200px', textAlign: 'right' }}>
           <p style={{ 
             color: '#FF6B35', 
             fontSize: '12px', 
@@ -4234,10 +4234,26 @@ export default function UpliftWebsite() {
           /* Navigation */
           .nav-links { display: none !important; }
           
-          /* Two column sections */
-          .two-col-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-          .two-col-grid > div:first-child { order: 2; }
-          .two-col-grid > div:last-child { order: 1; }
+          /* Hide all mockups on mobile */
+          .mockup-container { display: none !important; }
+          
+          /* Two column sections - single column on mobile */
+          .two-col-grid { 
+            grid-template-columns: 1fr !important; 
+            gap: 0 !important; 
+          }
+          
+          /* Demo preview - stack label and scale for mobile */
+          .demo-screen-container {
+            flex-direction: column !important;
+            gap: 20px !important;
+            transform: scale(0.55) !important;
+          }
+          .demo-label {
+            width: auto !important;
+            text-align: center !important;
+            order: -1 !important;
+          }
           
           /* Grids */
           .section-grid { grid-template-columns: 1fr !important; }
@@ -4252,7 +4268,7 @@ export default function UpliftWebsite() {
           /* Buttons */
           .cta-buttons { flex-direction: column !important; width: 100%; }
           .cta-buttons button, .cta-buttons a { width: 100% !important; justify-content: center !important; }
-          .trust-badges { flex-wrap: wrap; justify-content: center; }
+          .trust-badges { flex-wrap: wrap !important; justify-content: center !important; gap: 16px !important; }
           
           /* Demo section */
           #platform { padding: 24px 16px 60px !important; }
@@ -4281,11 +4297,19 @@ export default function UpliftWebsite() {
           .four-col-grid { grid-template-columns: 1fr 1fr !important; }
           .feature-grid { grid-template-columns: 1fr !important; }
           
+          /* Demo - even smaller on phones */
+          .demo-screen-container {
+            transform: scale(0.45) !important;
+          }
+          
           /* Demo section height */
           #platform > div { height: 350px !important; }
           
           /* Section padding */
           section { padding: 60px 0 !important; }
+          
+          /* Trust badges stack */
+          .trust-badges { flex-direction: column !important; align-items: center !important; }
         }
       `}</style>
       
@@ -4513,7 +4537,7 @@ export default function UpliftWebsite() {
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
           <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             {/* Left - Mockups */}
-            <div style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
+            <div className="mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
               <div className="float-animation">
                 <MobileScheduleScreen />
               </div>
@@ -4621,7 +4645,7 @@ export default function UpliftWebsite() {
             </div>
             
             {/* Right - Mockups */}
-            <div style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
+            <div className="mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
               <div className="float-animation">
                 <MobileRewardsScreen />
               </div>
@@ -4675,7 +4699,7 @@ export default function UpliftWebsite() {
             </div>
             
             {/* Right - Portal Mockups */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="mockup-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <PortalDashboard />
               <PortalSkillsMatrix />
             </div>
@@ -4703,7 +4727,7 @@ export default function UpliftWebsite() {
             </p>
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '48px' }}>
+          <div className="mockup-container" style={{ display: 'flex', justifyContent: 'center', marginBottom: '48px' }}>
             <PortalSchedule />
           </div>
           
@@ -4797,7 +4821,9 @@ export default function UpliftWebsite() {
               </div>
             </div>
             
-            <PortalIntegrations />
+            <div className="mockup-container">
+              <PortalIntegrations />
+            </div>
           </div>
         </div>
       </section>
