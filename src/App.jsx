@@ -4219,25 +4219,73 @@ export default function UpliftWebsite() {
         }
         
         /* Mobile Responsive */
-        @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+        @media (max-width: 1024px) {
+          .hero-grid { grid-template-columns: 1fr !important; text-align: center; gap: 40px !important; }
           .hero-grid > div:last-child { display: none; }
-          .hero-h1 { font-size: 36px !important; }
-          .section-grid { grid-template-columns: 1fr !important; }
-          .pricing-grid { grid-template-columns: 1fr !important; }
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .features-grid { grid-template-columns: 1fr !important; }
+          .two-col-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+        }
+        
+        @media (max-width: 768px) {
+          /* Hero */
+          .hero-grid { grid-template-columns: 1fr !important; text-align: center; padding: 120px 16px 40px !important; }
+          .hero-grid > div:last-child { display: none; }
+          .hero-h1 { font-size: 32px !important; }
+          
+          /* Navigation */
           .nav-links { display: none !important; }
-          .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-          .roi-grid { grid-template-columns: 1fr !important; }
-          .cta-buttons { flex-direction: column; }
+          
+          /* Two column sections */
+          .two-col-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .two-col-grid > div:first-child { order: 2; }
+          .two-col-grid > div:last-child { order: 1; }
+          
+          /* Grids */
+          .section-grid { grid-template-columns: 1fr !important; }
+          .pricing-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
+          .features-grid { grid-template-columns: 1fr !important; }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; text-align: left; }
+          .roi-grid { grid-template-columns: 1fr 1fr !important; }
+          .four-col-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .feature-grid { grid-template-columns: 1fr 1fr !important; }
+          
+          /* Buttons */
+          .cta-buttons { flex-direction: column !important; width: 100%; }
+          .cta-buttons button, .cta-buttons a { width: 100% !important; justify-content: center !important; }
           .trust-badges { flex-wrap: wrap; justify-content: center; }
+          
+          /* Demo section */
+          #platform { padding: 24px 16px 60px !important; }
+          
+          /* Section padding */
+          section { padding: 80px 0 !important; }
+          
+          /* Typography */
+          h2 { font-size: 32px !important; }
+          
+          /* Trial banner flex */
+          .trial-banner { flex-direction: column !important; text-align: center !important; }
+          .trial-banner > div { text-align: center !important; }
+          
+          /* Flex banner */
+          .flex-banner { flex-direction: column !important; text-align: center !important; }
         }
         
         @media (max-width: 480px) {
           .hero-h1 { font-size: 28px !important; }
-          .section-h2 { font-size: 28px !important; }
-          .pricing-card { padding: 24px !important; }
+          h2 { font-size: 26px !important; }
+          .pricing-card { padding: 20px !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          .footer-grid { grid-template-columns: 1fr !important; text-align: center !important; }
+          .roi-grid { grid-template-columns: 1fr !important; }
+          .four-col-grid { grid-template-columns: 1fr 1fr !important; }
+          .feature-grid { grid-template-columns: 1fr !important; }
+          
+          /* Demo section height */
+          #platform > div { height: 350px !important; }
+          
+          /* Section padding */
+          section { padding: 60px 0 !important; }
         }
       `}</style>
       
@@ -4303,7 +4351,7 @@ export default function UpliftWebsite() {
               Skills tracking. AI scheduling. Internal mobility. All in one app that workers actually love.
             </p>
             
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '40px' }}>
+            <div className="cta-buttons" style={{ display: 'flex', gap: '16px', marginBottom: '40px' }}>
               <button onClick={() => setShowWaitlist(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FF6B35', color: 'white', border: 'none', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 700, cursor: 'pointer' }}>
                 Try Demo <ArrowRight size={20} />
               </button>
@@ -4463,7 +4511,7 @@ export default function UpliftWebsite() {
       {/* ================================================================== */}
       <section id="for-workers" style={{ padding: '120px 0', background: '#F8FAFC' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+          <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             {/* Left - Mockups */}
             <div style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
               <div className="float-animation">
@@ -4490,7 +4538,7 @@ export default function UpliftWebsite() {
                 and watch your career path unfold.
               </p>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 {[
                   { icon: DollarSign, label: 'Earnings dashboard' },
                   { icon: Calendar, label: 'Shift marketplace' },
@@ -4517,7 +4565,7 @@ export default function UpliftWebsite() {
       {/* ================================================================== */}
       <section style={{ padding: '120px 0', background: 'white' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+          <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             {/* Left - Content */}
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#FEF3C7', color: '#D97706', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 500 }}>
@@ -4590,7 +4638,7 @@ export default function UpliftWebsite() {
       {/* ================================================================== */}
       <section id="for-managers" style={{ padding: '120px 0', background: '#F8FAFC' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+          <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             {/* Left - Content */}
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#F3E8FF', color: '#7C3AED', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 500 }}>
@@ -4607,7 +4655,7 @@ export default function UpliftWebsite() {
                 skills matrix, and career pathway visualization.
               </p>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 {[
                   { icon: BarChart3, label: 'Workforce dashboard' },
                   { icon: Brain, label: 'AI scheduler' },
@@ -4660,7 +4708,7 @@ export default function UpliftWebsite() {
           </div>
           
           {/* Rules Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+          <div className="four-col-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
             {[
               { icon: Clock, name: 'Min Rest: 11h', desc: 'Compliance' },
               { icon: Shield, name: 'Max Hours: 48h', desc: 'Compliance' },
@@ -4692,7 +4740,7 @@ export default function UpliftWebsite() {
       {/* ================================================================== */}
       <section style={{ padding: '120px 0', background: 'white' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+          <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#EFF6FF', color: '#2563EB', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 500 }}>
                 <Link2 size={16} /> Integration Hub
@@ -4781,7 +4829,8 @@ export default function UpliftWebsite() {
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
           
           {/* Trial Banner */}
-          <div style={{ 
+          {/* Trial Banner */}
+          <div className="trial-banner" style={{ 
             background: 'linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.05) 100%)', 
             border: '1px solid rgba(16,185,129,0.3)', 
             borderRadius: '16px', 
@@ -4933,7 +4982,8 @@ export default function UpliftWebsite() {
           </div>
           
           {/* Flex Pricing Explanation */}
-          <div style={{ 
+          {/* Flex Pricing Explanation */}
+          <div className="flex-banner" style={{ 
             marginTop: '32px', 
             padding: '20px 24px', 
             background: 'rgba(255,255,255,0.05)', 
@@ -4981,7 +5031,7 @@ export default function UpliftWebsite() {
           <p style={{ fontSize: '18px', color: '#64748B', marginBottom: '40px' }}>
             See Uplift in action. Try the demo or book a call with our team.
           </p>
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+          <div className="cta-buttons" style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
             <button onClick={() => setShowWaitlist(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FF6B35', color: 'white', border: 'none', padding: '18px 36px', borderRadius: '12px', fontSize: '18px', fontWeight: 700, cursor: 'pointer' }}>
               Try Demo <ArrowRight size={20} />
             </button>
@@ -4997,7 +5047,7 @@ export default function UpliftWebsite() {
       {/* ================================================================== */}
       <footer style={{ background: '#0F172A', padding: '64px 0 32px', borderTop: '1px solid #1E293B' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '48px', marginBottom: '48px' }}>
+          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '48px', marginBottom: '48px' }}>
             <div>
               <RisingULogo color="light" />
               <p style={{ color: '#64748B', fontSize: '14px', marginTop: '16px', maxWidth: '300px' }}>
