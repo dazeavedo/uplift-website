@@ -4235,10 +4235,13 @@ export default function UpliftWebsite() {
   }, []);
   
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: "'Outfit', 'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-white" style={{ fontFamily: "'Outfit', 'Inter', sans-serif", overflowX: 'hidden', width: '100%' }}>
       {/* Fonts & Animations */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; width: 100%; }
         
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         .float-animation { animation: float 6s ease-in-out infinite; }
@@ -4283,26 +4286,22 @@ export default function UpliftWebsite() {
           /* Two column sections - single column on mobile */
           .two-col-grid { 
             grid-template-columns: 1fr !important; 
-            gap: 32px !important; 
+            gap: 32px !important;
+            width: 100% !important;
           }
           
           /* Phone mockups - show only first phone, center it */
           .phone-mockup-container { 
             justify-content: center !important;
+            width: 100% !important;
           }
           .phone-mockup-container .float-delayed { 
             display: none !important; 
           }
           
-          /* Portal mockups - scale to fit mobile width but stay visible */
+          /* Portal mockups - hide on mobile (900px wide causes overflow) */
           .portal-mockup-container {
-            transform: scale(0.75);
-            transform-origin: top center;
-            margin-bottom: -60px;
-            overflow: visible;
-          }
-          .portal-mockup-container .mobile-hide-second { 
-            display: none !important; 
+            display: none !important;
           }
           
           /* Demo preview - scale for mobile */
@@ -4349,6 +4348,10 @@ export default function UpliftWebsite() {
           
           /* Flex banner */
           .flex-banner { flex-direction: column !important; text-align: center !important; }
+          
+          /* Prevent horizontal scroll */
+          body, html { overflow-x: hidden !important; }
+          section > div { max-width: 100% !important; }
         }
         
         @media (max-width: 480px) {
@@ -4367,12 +4370,6 @@ export default function UpliftWebsite() {
           }
           .demo-screen-container {
             transform: scale(0.45) !important;
-          }
-          
-          /* Portal mockups - slightly smaller on small phones */
-          .portal-mockup-container {
-            transform: scale(0.6);
-            margin-bottom: -100px;
           }
           
           /* Section padding */
