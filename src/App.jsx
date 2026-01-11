@@ -4234,25 +4234,42 @@ export default function UpliftWebsite() {
           /* Navigation */
           .nav-links { display: none !important; }
           
-          /* Hide all mockups on mobile */
-          .mockup-container { display: none !important; }
-          
           /* Two column sections - single column on mobile */
           .two-col-grid { 
             grid-template-columns: 1fr !important; 
-            gap: 0 !important; 
+            gap: 32px !important; 
           }
           
-          /* Demo preview - stack label and scale for mobile */
+          /* Phone mockups - show only first phone, center it */
+          .phone-mockup-container { 
+            justify-content: center !important;
+          }
+          .phone-mockup-container .float-delayed { 
+            display: none !important; 
+          }
+          
+          /* Portal mockups - scale down to fit mobile width */
+          .portal-mockup-container {
+            transform: scale(0.55);
+            transform-origin: top center;
+            margin-bottom: -80px;
+          }
+          .portal-mockup-container .mobile-hide-second { 
+            display: none !important; 
+          }
+          
+          /* Demo preview - scale for mobile */
+          .demo-container {
+            height: 400px !important;
+          }
           .demo-screen-container {
             flex-direction: column !important;
-            gap: 20px !important;
+            gap: 16px !important;
             transform: scale(0.55) !important;
           }
           .demo-label {
             width: auto !important;
             text-align: center !important;
-            order: -1 !important;
           }
           
           /* Grids */
@@ -4271,7 +4288,7 @@ export default function UpliftWebsite() {
           .trust-badges { flex-wrap: wrap !important; justify-content: center !important; gap: 16px !important; }
           
           /* Demo section */
-          #platform { padding: 24px 16px 60px !important; }
+          #platform { padding: 24px 16px 40px !important; }
           
           /* Section padding */
           section { padding: 80px 0 !important; }
@@ -4297,13 +4314,19 @@ export default function UpliftWebsite() {
           .four-col-grid { grid-template-columns: 1fr 1fr !important; }
           .feature-grid { grid-template-columns: 1fr !important; }
           
-          /* Demo - even smaller on phones */
+          /* Demo - smaller on phones */
+          .demo-container {
+            height: 350px !important;
+          }
           .demo-screen-container {
             transform: scale(0.45) !important;
           }
           
-          /* Demo section height */
-          #platform > div { height: 350px !important; }
+          /* Portal mockups - smaller on phones */
+          .portal-mockup-container {
+            transform: scale(0.45);
+            margin-bottom: -120px;
+          }
           
           /* Section padding */
           section { padding: 60px 0 !important; }
@@ -4462,7 +4485,7 @@ export default function UpliftWebsite() {
             }}
           >
             {/* Embedded Demo Preview */}
-            <div style={{ 
+            <div className="demo-container" style={{ 
               width: '100%',
               height: '500px',
               position: 'relative',
@@ -4537,7 +4560,7 @@ export default function UpliftWebsite() {
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
           <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             {/* Left - Mockups */}
-            <div className="mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
+            <div className="phone-mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
               <div className="float-animation">
                 <MobileScheduleScreen />
               </div>
@@ -4645,7 +4668,7 @@ export default function UpliftWebsite() {
             </div>
             
             {/* Right - Mockups */}
-            <div className="mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
+            <div className="phone-mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
               <div className="float-animation">
                 <MobileRewardsScreen />
               </div>
@@ -4699,9 +4722,11 @@ export default function UpliftWebsite() {
             </div>
             
             {/* Right - Portal Mockups */}
-            <div className="mockup-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="portal-mockup-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <PortalDashboard />
-              <PortalSkillsMatrix />
+              <div className="mobile-hide-second">
+                <PortalSkillsMatrix />
+              </div>
             </div>
           </div>
         </div>
@@ -4727,7 +4752,7 @@ export default function UpliftWebsite() {
             </p>
           </div>
           
-          <div className="mockup-container" style={{ display: 'flex', justifyContent: 'center', marginBottom: '48px' }}>
+          <div className="portal-mockup-container" style={{ display: 'flex', justifyContent: 'center', marginBottom: '48px' }}>
             <PortalSchedule />
           </div>
           
@@ -4821,7 +4846,7 @@ export default function UpliftWebsite() {
               </div>
             </div>
             
-            <div className="mockup-container">
+            <div className="portal-mockup-container">
               <PortalIntegrations />
             </div>
           </div>
