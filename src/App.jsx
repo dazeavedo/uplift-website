@@ -3641,7 +3641,7 @@ const VideoDemo = ({ isOpen, onClose }) => {
   };
   
   return (
-    <div style={{
+    <div className="video-demo-modal" style={{
       position: 'fixed',
       inset: 0,
       zIndex: 9999,
@@ -3655,6 +3655,52 @@ const VideoDemo = ({ isOpen, onClose }) => {
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
         @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(255,107,53,0.3); } 50% { box-shadow: 0 0 40px rgba(255,107,53,0.5); } }
+        
+        @media (max-width: 768px) {
+          .video-demo-modal .demo-main-content {
+            padding: 16px !important;
+          }
+          .video-demo-modal .demo-content-row {
+            flex-direction: column !important;
+            gap: 24px !important;
+          }
+          .video-demo-modal .demo-text-overlay {
+            width: 100% !important;
+            text-align: center !important;
+            order: 1 !important;
+          }
+          .video-demo-modal .demo-text-overlay h2 {
+            font-size: 24px !important;
+          }
+          .video-demo-modal .demo-text-overlay p {
+            font-size: 14px !important;
+          }
+          .video-demo-modal .demo-screen-wrapper {
+            transform: scale(0.6) !important;
+            margin: -60px 0 !important;
+          }
+          .video-demo-modal .demo-intro h1 {
+            font-size: 28px !important;
+          }
+          .video-demo-modal .demo-portal-wrapper {
+            transform: scale(0.4) !important;
+            margin: -120px 0 !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .video-demo-modal .demo-screen-wrapper {
+            transform: scale(0.5) !important;
+            margin: -80px 0 !important;
+          }
+          .video-demo-modal .demo-portal-wrapper {
+            transform: scale(0.32) !important;
+            margin: -160px 0 !important;
+          }
+          .video-demo-modal .demo-text-overlay h2 {
+            font-size: 20px !important;
+          }
+        }
       `}</style>
       
       {/* Top Bar */}
@@ -3686,11 +3732,11 @@ const VideoDemo = ({ isOpen, onClose }) => {
       </div>
       
       {/* Main Content */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
+      <div className="demo-main-content" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', overflow: 'hidden' }}>
         
         {/* INTRO */}
         {currentSegment.type === 'intro' && (
-          <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s ease' }}>
+          <div className="demo-intro" style={{ textAlign: 'center', animation: 'fadeIn 0.5s ease' }}>
             <div style={{ marginBottom: '32px', animation: 'float 3s ease-in-out infinite' }}>
               <RisingULogo color="light" size={72} />
             </div>
@@ -3713,9 +3759,9 @@ const VideoDemo = ({ isOpen, onClose }) => {
         
         {/* MOBILE SCREENS */}
         {currentSegment.type === 'mobile' && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '80px', animation: 'fadeIn 0.3s ease' }}>
+          <div className="demo-content-row" style={{ display: 'flex', alignItems: 'center', gap: '80px', animation: 'fadeIn 0.3s ease' }}>
             {/* Text Overlay - Left */}
-            <div style={{ width: '400px', textAlign: 'right' }}>
+            <div className="demo-text-overlay" style={{ width: '400px', textAlign: 'right' }}>
               {currentSegment.overlay?.label && (
                 <div style={{
                   display: 'inline-flex',
@@ -3772,7 +3818,7 @@ const VideoDemo = ({ isOpen, onClose }) => {
             </div>
             
             {/* Screen */}
-            <div style={{ animation: 'float 4s ease-in-out infinite' }}>
+            <div className="demo-screen-wrapper" style={{ animation: 'float 4s ease-in-out infinite' }}>
               {currentSegment.screen === 'home' && (
                 <VideoMobileHomeScreen 
                   highlightEarnings={currentSegment.highlights?.earnings}
@@ -3803,9 +3849,9 @@ const VideoDemo = ({ isOpen, onClose }) => {
         
         {/* MANAGER MOBILE SCREENS */}
         {currentSegment.type === 'manager-mobile' && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '80px', animation: 'fadeIn 0.3s ease' }}>
+          <div className="demo-content-row" style={{ display: 'flex', alignItems: 'center', gap: '80px', animation: 'fadeIn 0.3s ease' }}>
             {/* Text Overlay - Left */}
-            <div style={{ width: '400px', textAlign: 'right' }}>
+            <div className="demo-text-overlay" style={{ width: '400px', textAlign: 'right' }}>
               {currentSegment.overlay?.label && (
                 <div style={{
                   display: 'inline-flex',
@@ -3862,7 +3908,7 @@ const VideoDemo = ({ isOpen, onClose }) => {
             </div>
             
             {/* Screen */}
-            <div style={{ animation: 'float 4s ease-in-out infinite' }}>
+            <div className="demo-screen-wrapper" style={{ animation: 'float 4s ease-in-out infinite' }}>
               <ManagerMobileDashboard 
                 highlightStats={currentSegment.highlights?.stats}
                 highlightApprovals={currentSegment.highlights?.approvals}
@@ -3904,9 +3950,9 @@ const VideoDemo = ({ isOpen, onClose }) => {
         
         {/* PORTAL SCREENS */}
         {currentSegment.type === 'portal' && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', animation: 'fadeIn 0.3s ease' }}>
+          <div className="demo-content-row" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', animation: 'fadeIn 0.3s ease' }}>
             {/* Text Overlay - Top */}
-            <div style={{ textAlign: 'center', maxWidth: '700px' }}>
+            <div className="demo-text-overlay" style={{ textAlign: 'center', maxWidth: '700px' }}>
               {currentSegment.overlay?.label && (
                 <div style={{
                   display: 'inline-flex',
@@ -3962,7 +4008,7 @@ const VideoDemo = ({ isOpen, onClose }) => {
             </div>
             
             {/* Screen */}
-            <div>
+            <div className="demo-portal-wrapper">
               {currentSegment.screen === 'people' && (
                 <VideoPortalPeopleHub 
                   highlightStats={currentSegment.highlights?.stats}
@@ -4248,11 +4294,12 @@ export default function UpliftWebsite() {
             display: none !important; 
           }
           
-          /* Portal mockups - scale down to fit mobile width */
+          /* Portal mockups - scale to fit mobile width but stay visible */
           .portal-mockup-container {
-            transform: scale(0.55);
+            transform: scale(0.75);
             transform-origin: top center;
-            margin-bottom: -80px;
+            margin-bottom: -60px;
+            overflow: visible;
           }
           .portal-mockup-container .mobile-hide-second { 
             display: none !important; 
@@ -4322,10 +4369,10 @@ export default function UpliftWebsite() {
             transform: scale(0.45) !important;
           }
           
-          /* Portal mockups - smaller on phones */
+          /* Portal mockups - slightly smaller on small phones */
           .portal-mockup-container {
-            transform: scale(0.45);
-            margin-bottom: -120px;
+            transform: scale(0.6);
+            margin-bottom: -100px;
           }
           
           /* Section padding */
