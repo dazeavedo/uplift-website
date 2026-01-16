@@ -4918,6 +4918,40 @@ export default function UpliftWebsite() {
       </section>
       
       {/* ================================================================== */}
+      {/* FOUNDERS OFFER SECTION */}
+      {/* ================================================================== */}
+      <section style={{ padding: '80px 0', background: 'linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%)' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.2)', color: 'white', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 600 }}>
+            <Clock size={16} /> Limited Time — Founding Partners Only
+          </div>
+          <h2 style={{ fontSize: '40px', fontWeight: 700, color: 'white', marginBottom: '16px' }}>
+            Lock in 33% off. Forever.
+          </h2>
+          <p style={{ fontSize: '20px', color: 'rgba(255,255,255,0.9)', marginBottom: '16px', maxWidth: '600px', margin: '0 auto 24px' }}>
+            We're looking for 10 founding partners to shape the future of Uplift. In return, you get our lowest prices — guaranteed for life.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', flexWrap: 'wrap', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
+              <CheckCircle2 size={20} />
+              <span>33% discount locked forever</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
+              <CheckCircle2 size={20} />
+              <span>Direct access to founder</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
+              <CheckCircle2 size={20} />
+              <span>Shape the product roadmap</span>
+            </div>
+          </div>
+          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)' }}>
+            Only 7 spots remaining
+          </p>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
       {/* PRICING SECTION */}
       {/* ================================================================== */}
       <section id="pricing" style={{ padding: '120px 0', background: '#0F172A' }}>
@@ -4955,7 +4989,7 @@ export default function UpliftWebsite() {
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,107,53,0.2)', color: '#FF6B35', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 600 }}>
-              <Zap size={16} /> Design Partner Pricing — Lock In Forever
+              <Zap size={16} /> Founding Partner Pricing — Lock In 33% Off Forever
             </div>
             <h2 style={{ fontSize: '40px', fontWeight: 700, color: 'white', marginBottom: '16px' }}>
               Full platform. Pick your team size.
@@ -5142,7 +5176,7 @@ export default function UpliftWebsite() {
       {/* ================================================================== */}
       <footer style={{ background: '#0F172A', padding: '64px 0 32px', borderTop: '1px solid #1E293B' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '48px', marginBottom: '48px' }}>
+          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '48px', marginBottom: '48px' }}>
             <div>
               <RisingULogo color="light" />
               <p style={{ color: '#64748B', fontSize: '14px', marginTop: '16px', maxWidth: '300px' }}>
@@ -5151,16 +5185,23 @@ export default function UpliftWebsite() {
             </div>
             
             {[
-              { title: 'Platform', links: ['For Workers', 'For Managers', 'AI Scheduler', 'Integrations'] },
-              { title: 'Company', links: ['About', 'Careers', 'Blog', 'Contact'] },
-              { title: 'Legal', links: ['Privacy', 'Terms', 'GDPR', 'Security'] }
+              { title: 'Platform', links: [
+                { name: 'For Workers', href: '#for-workers' },
+                { name: 'For Managers', href: '#for-managers' },
+                { name: 'AI Scheduler', href: '#platform' },
+                { name: 'Integrations', href: '#platform' }
+              ]},
+              { title: 'Company', links: [
+                { name: 'Pricing', href: '#pricing' },
+                { name: 'Contact', href: 'mailto:hello@uplifthq.co.uk' }
+              ]}
             ].map((col, i) => (
               <div key={i}>
                 <h4 style={{ color: 'white', fontWeight: 600, marginBottom: '16px', fontSize: '14px' }}>{col.title}</h4>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                   {col.links.map((link, j) => (
                     <li key={j} style={{ marginBottom: '10px' }}>
-                      <a href="#" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>{link}</a>
+                      <a href={link.href} style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>{link.name}</a>
                     </li>
                   ))}
                 </ul>
