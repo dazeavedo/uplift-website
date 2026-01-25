@@ -47,26 +47,67 @@ export default function DemoPage() {
   const [accessGranted, setAccessGranted] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
 
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !email.includes('@')) return;
 
-    // Submit to HubSpot Forms API
-    // This creates a contact in HubSpot and triggers the workflow to send the welcome email
-    fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${HUBSPOT_CONFIG.portalId}/${HUBSPOT_CONFIG.formGuid}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fields: [{ name: 'email', value: email }],
-        context: {
-          pageUri: window.location.href,
-          pageName: 'Demo Access Request'
-        }
-      })
-    }).catch(err => console.error('HubSpot submission error:', err));
+    setIsSubmitting(true);
+    setSubmitError(false);
 
-    setSubmittedEmail(email);
-    setAccessGranted(true);
+    // Get HubSpot tracking cookie if available
+    const hutk = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('hubspotutk='))
+      ?.split('=')[1];
+
+    try {
+      const response = await fetch(
+        `https://api.hsforms.com/submissions/v3/integration/submit/${HUBSPOT_CONFIG.portalId}/${HUBSPOT_CONFIG.formGuid}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fields: [
+              { name: 'email', value: email }
+            ],
+            context: {
+              hutk: hutk || undefined,
+              pageUri: window.location.href,
+              pageName: 'Demo Access Request'
+            },
+            legalConsentOptions: {
+              consent: {
+                consentToProcess: true,
+                text: 'I agree to receive demo access and follow-up communications',
+                communications: [
+                  {
+                    value: true,
+                    subscriptionTypeId: 999,
+                    text: 'Marketing communications'
+                  }
+                ]
+              }
+            }
+          })
+        }
+      );
+
+      if (response.ok) {
+        setSubmittedEmail(email);
+        setAccessGranted(true);
+      } else {
+        console.error('HubSpot error:', await response.text());
+        setSubmitError(true);
+      }
+    } catch (err) {
+      console.error('HubSpot submission error:', err);
+      setSubmitError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -151,24 +192,39 @@ export default function DemoPage() {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 style={{
                   width: '100%',
                   padding: '18px',
                   fontSize: '16px',
                   fontWeight: 600,
-                  background: '#FF6B35',
+                  background: isSubmitting ? '#94A3B8' : '#FF6B35',
                   color: 'white',
                   border: 'none',
                   borderRadius: '12px',
-                  cursor: 'pointer',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  opacity: isSubmitting ? 0.7 : 1
                 }}
               >
-                Get Access <ArrowRight size={20} />
+                {isSubmitting ? 'Sending...' : 'Get Access'} {!isSubmitting && <ArrowRight size={20} />}
               </button>
+
+              {submitError && (
+                <p style={{
+                  fontSize: '14px',
+                  color: '#EF4444',
+                  marginTop: '12px',
+                  background: 'rgba(239,68,68,0.1)',
+                  padding: '12px',
+                  borderRadius: '8px'
+                }}>
+                  Something went wrong. Please try again or email us at hello@uplifthq.co.uk
+                </p>
+              )}
             </form>
 
             <p style={{
@@ -176,7 +232,7 @@ export default function DemoPage() {
               color: 'rgba(255,255,255,0.5)',
               marginTop: '16px'
             }}>
-              By continuing, you agree to our Privacy Policy
+              By continuing, you agree to receive demo access and follow-up communications
             </p>
 
             <p style={{
