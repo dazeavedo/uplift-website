@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import ProductTourCarousel from '../components/ProductTourCarousel';
 import {
   ArrowRight, ArrowUpRight, Check, ChevronRight, ChevronDown, Users, Calendar,
   TrendingUp, Zap, Shield, BarChart3, Smartphone, Monitor, Play, Pause, Star, Menu, X,
@@ -7,7 +8,7 @@ import {
   Settings, Link2, Lock, Globe, MessageSquare, Bell, FileCheck,
   Sparkles, Brain, CheckCircle2, MapPin, ChevronUp, Home, User, Wallet,
   AlertCircle, MoreHorizontal, Search, Filter, Plus, Eye, Edit, Trash2,
-  ChevronLeft, ArrowLeft, RotateCcw
+  ChevronLeft, ArrowLeft, RotateCcw, Activity, FileText
 } from 'lucide-react';
 
 // ============================================================================
@@ -38,7 +39,7 @@ const RisingULogo = ({ size = 40, variant = "full", color = "dark" }) => {
 };
 
 // ============================================================================
-// MOBILE APP MOCKUPS - Based on actual app screens
+// MOBILE APP MOCKUPS - Pixel-accurate from real product screenshots
 // ============================================================================
 
 // Mobile Frame Component
@@ -54,23 +55,22 @@ const MobileFrame = ({ children, className = "" }) => (
       <div style={{
         width: '100%',
         height: '580px',
-        background: '#0F172A',
+        background: '#F8FAFC',
         borderRadius: '32px',
         overflow: 'hidden',
         position: 'relative'
       }}>
-        {/* Notch */}
+        {/* Dynamic Island */}
         <div style={{
           position: 'absolute',
-          top: 0,
+          top: '8px',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '120px',
-          height: '28px',
-          background: '#0F172A',
-          borderBottomLeftRadius: '16px',
-          borderBottomRightRadius: '16px',
-          zIndex: 10
+          width: '90px',
+          height: '24px',
+          background: '#000',
+          borderRadius: '12px',
+          zIndex: 20
         }} />
         {children}
       </div>
@@ -78,190 +78,301 @@ const MobileFrame = ({ children, className = "" }) => (
   </div>
 );
 
-// Mobile: Home Dashboard Screen (Light Mode)
-const MobileHomeScreen = () => (
-  <MobileFrame>
-    <div style={{ height: '100%', background: '#FFFFFF', padding: '48px 16px 16px' }}>
-      {/* Header */}
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ color: '#64748B', fontSize: '14px', margin: 0 }}>Good morning</p>
-        <p style={{ color: '#0F172A', fontSize: '22px', fontWeight: 600, margin: '4px 0 0' }}>Sarah Mitchell</p>
+// Worker Bottom Nav (5 tabs: Home, Schedule, Tasks, Career, More)
+const WorkerBottomNav = ({ active = 'Home' }) => (
+  <div style={{
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    background: '#FFFFFF',
+    borderTop: '1px solid #E2E8F0',
+    padding: '8px 8px 20px',
+    display: 'flex',
+    justifyContent: 'space-around'
+  }}>
+    {[
+      { icon: Home, label: 'Home' },
+      { icon: Calendar, label: 'Schedule' },
+      { icon: FileCheck, label: 'Tasks' },
+      { icon: Target, label: 'Career' },
+      { icon: MoreHorizontal, label: 'More' }
+    ].map((item, i) => (
+      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <item.icon size={22} color={item.label === active ? '#F97316' : '#94A3B8'} />
+        <span style={{ color: item.label === active ? '#F97316' : '#94A3B8', fontSize: '10px', marginTop: '4px', fontWeight: 500 }}>{item.label}</span>
       </div>
-      
-      {/* Earnings Card */}
-      <div style={{
-        background: 'linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%)',
-        borderRadius: '20px',
-        padding: '20px',
-        marginBottom: '16px'
-      }}>
-        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '13px', margin: 0 }}>This week</p>
-        <p style={{ color: 'white', fontSize: '36px', fontWeight: 700, margin: '4px 0 8px' }}>£342.50</p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <TrendingUp size={14} color="white" />
-          <span style={{ color: 'white', fontSize: '13px' }}>+12% from last week</span>
-        </div>
-      </div>
-      
-      {/* Stats Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-        <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0' }}>
-          <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>Hours</p>
-          <p style={{ color: '#0F172A', fontSize: '24px', fontWeight: 600, margin: '4px 0 0' }}>28.5</p>
-        </div>
-        <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0' }}>
-          <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>Shifts</p>
-          <p style={{ color: '#0F172A', fontSize: '24px', fontWeight: 600, margin: '4px 0 0' }}>6</p>
-        </div>
-      </div>
-      
-      {/* Next Shift */}
-      <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0', marginBottom: '12px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-          <span style={{ color: '#FF6B35', fontSize: '13px', fontWeight: 500 }}>Next shift</span>
-          <span style={{ color: '#64748B', fontSize: '12px' }}>Tomorrow</span>
-        </div>
-        <p style={{ color: '#0F172A', fontWeight: 500, margin: 0 }}>09:00 - 17:00</p>
-        <p style={{ color: '#64748B', fontSize: '13px', margin: '4px 0 0' }}>Oxford Street Store</p>
-      </div>
-      
-      {/* Career Path CTA */}
-      <div style={{
-        background: 'linear-gradient(90deg, #FFF7ED 0%, #FEF3C7 100%)',
-        borderRadius: '16px',
-        padding: '14px',
-        border: '1px solid #FFEDD5'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Target size={18} color="#FF6B35" />
-          <span style={{ color: '#0F172A', fontSize: '14px' }}>3 skills away from Shift Supervisor</span>
-        </div>
-      </div>
-      
-      {/* Bottom Nav - 7 tabs: Home, Feed, Schedule, Tasks, Career, Rewards, Profile */}
-      <div style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background: '#FFFFFF',
-        borderTop: '1px solid #E2E8F0',
-        padding: '8px 8px 20px',
-        display: 'flex',
-        justifyContent: 'space-around'
-      }}>
-        {[
-          { icon: Home, label: 'Home', active: true },
-          { icon: MessageSquare, label: 'Feed', active: false },
-          { icon: Calendar, label: 'Schedule', active: false },
-          { icon: FileCheck, label: 'Tasks', active: false },
-          { icon: Target, label: 'Career', active: false },
-          { icon: Award, label: 'Rewards', active: false },
-          { icon: User, label: 'Profile', active: false }
-        ].map((item, i) => (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <item.icon size={20} color={item.active ? '#FF6B35' : '#94A3B8'} />
-            <span style={{ color: item.active ? '#FF6B35' : '#94A3B8', fontSize: '9px', marginTop: '2px', fontWeight: 500 }}>{item.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </MobileFrame>
+    ))}
+  </div>
 );
 
-// Mobile: Career Path Screen (Light Mode)
-const MobileCareerScreen = () => (
-  <MobileFrame>
-    <div style={{ height: '100%', background: '#FFFFFF', padding: '48px 16px 80px' }}>
-      {/* Header */}
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ color: '#0F172A', fontSize: '20px', fontWeight: 600, margin: 0 }}>Career Path</p>
-        <p style={{ color: '#64748B', fontSize: '13px', marginTop: '4px' }}>See where you can go</p>
+// Manager Bottom Nav (5 tabs: Dashboard, Schedule, Tasks, Team, More)
+const ManagerBottomNav = ({ active = 'Dashboard' }) => (
+  <div style={{
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    background: '#FFFFFF',
+    borderTop: '1px solid #E2E8F0',
+    padding: '8px 8px 20px',
+    display: 'flex',
+    justifyContent: 'space-around'
+  }}>
+    {[
+      { icon: BarChart3, label: 'Dashboard' },
+      { icon: Calendar, label: 'Schedule' },
+      { icon: FileCheck, label: 'Tasks' },
+      { icon: Users, label: 'Team' },
+      { icon: MoreHorizontal, label: 'More' }
+    ].map((item, i) => (
+      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <item.icon size={22} color={item.label === active ? '#F97316' : '#94A3B8'} />
+        <span style={{ color: item.label === active ? '#F97316' : '#94A3B8', fontSize: '10px', marginTop: '4px', fontWeight: 500 }}>{item.label}</span>
       </div>
-      
-      {/* Current Role */}
+    ))}
+  </div>
+);
+
+// Worker Home Screen - Matches worker_home.jpeg exactly
+const MobileHomeScreen = () => (
+  <MobileFrame>
+    <div style={{ height: '100%', background: '#F8FAFC', padding: '44px 16px 80px', overflowY: 'auto' }}>
+      {/* Header with avatar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'linear-gradient(135deg, #FDA4AF, #FB923C)', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: '100%', background: 'url("data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\'></svg>")', backgroundSize: 'cover' }} />
+          </div>
+          <div>
+            <p style={{ color: '#64748B', fontSize: '13px', margin: 0 }}>Good evening,</p>
+            <p style={{ color: '#1E293B', fontSize: '18px', fontWeight: 600, margin: '2px 0 0' }}>Sarah</p>
+            <p style={{ color: '#F97316', fontSize: '12px', margin: '2px 0 0' }}>Grand Metro Hotels</p>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <MessageSquare size={18} color="#64748B" />
+            <div style={{ position: 'absolute', top: '6px', right: '6px', width: '16px', height: '16px', background: '#F97316', borderRadius: '50%', fontSize: '10px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}>3</div>
+          </div>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Bell size={18} color="#64748B" />
+          </div>
+        </div>
+      </div>
+
+      {/* Momentum Score Card - Dark */}
       <div style={{
-        background: 'linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%)',
+        background: '#1E293B',
         borderRadius: '16px',
         padding: '16px',
         marginBottom: '16px'
       }}>
-        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', margin: 0 }}>Current Role</p>
-        <p style={{ color: 'white', fontSize: '18px', fontWeight: 600, margin: '4px 0' }}>Sales Associate</p>
-        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '13px', margin: 0 }}>Since March 2024</p>
-      </div>
-      
-      {/* Career Ladder */}
-      <div style={{ position: 'relative', paddingLeft: '24px' }}>
-        {/* Vertical Line */}
-        <div style={{ position: 'absolute', left: '8px', top: '8px', bottom: '8px', width: '2px', background: 'linear-gradient(180deg, #FF6B35, #8B5CF6)' }} />
-        
-        {[
-          { role: 'Store Manager', timeline: '3-4 years', skills: 5, locked: true },
-          { role: 'Shift Supervisor', timeline: '1-2 years', skills: 3, locked: false, next: true },
-          { role: 'Senior Associate', timeline: '6-12 months', skills: 2, locked: false },
-          { role: 'Sales Associate', timeline: 'Current', skills: 0, locked: false, current: true }
-        ].map((step, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '16px', position: 'relative' }}>
-            <div style={{
-              width: '16px',
-              height: '16px',
-              borderRadius: '50%',
-              background: step.current ? '#FF6B35' : step.next ? '#8B5CF6' : step.locked ? '#CBD5E1' : '#10B981',
-              border: '3px solid #FFFFFF',
-              position: 'absolute',
-              left: '-24px',
-              boxShadow: '0 0 0 2px #E2E8F0'
-            }} />
-            <div style={{
-              flex: 1,
-              background: step.current ? '#FFF7ED' : '#F8FAFC',
-              borderRadius: '12px',
-              padding: '12px',
-              border: `1px solid ${step.current ? '#FFEDD5' : '#E2E8F0'}`,
-              opacity: step.locked ? 0.6 : 1
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <p style={{ color: '#0F172A', fontWeight: 500, fontSize: '14px', margin: 0 }}>{step.role}</p>
-                {step.current && <span style={{ background: '#FF6B35', color: 'white', fontSize: '10px', padding: '2px 8px', borderRadius: '10px' }}>You</span>}
-                {step.next && <span style={{ background: '#8B5CF6', color: 'white', fontSize: '10px', padding: '2px 8px', borderRadius: '10px' }}>Next</span>}
-              </div>
-              <p style={{ color: '#64748B', fontSize: '12px', margin: '4px 0 0' }}>{step.timeline}</p>
-              {step.skills > 0 && (
-                <p style={{ color: '#FF6B35', fontSize: '12px', margin: '6px 0 0' }}>{step.skills} skills needed</p>
-              )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: 'white', fontSize: '22px', fontWeight: 700 }}>87</span>
+          </div>
+          <div style={{ flex: 1 }}>
+            <p style={{ color: 'white', fontSize: '14px', fontWeight: 500, margin: 0 }}>Momentum Score</p>
+            <p style={{ color: '#94A3B8', fontSize: '12px', margin: '4px 0 8px' }}>Level 12 • 2,450 XP</p>
+            <div style={{ height: '6px', background: '#334155', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ width: '70%', height: '100%', background: 'linear-gradient(90deg, #F97316, #FB923C)' }} />
             </div>
           </div>
-        ))}
-      </div>
-      
-      {/* Bottom Nav - 7 tabs */}
-      <div style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background: '#FFFFFF',
-        borderTop: '1px solid #E2E8F0',
-        padding: '8px 8px 20px',
-        display: 'flex',
-        justifyContent: 'space-around'
-      }}>
-        {[
-          { icon: Home, label: 'Home', active: false },
-          { icon: MessageSquare, label: 'Feed', active: false },
-          { icon: Calendar, label: 'Schedule', active: false },
-          { icon: FileCheck, label: 'Tasks', active: false },
-          { icon: Target, label: 'Career', active: true },
-          { icon: Award, label: 'Rewards', active: false },
-          { icon: User, label: 'Profile', active: false }
-        ].map((item, i) => (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <item.icon size={20} color={item.active ? '#FF6B35' : '#94A3B8'} />
-            <span style={{ color: item.active ? '#FF6B35' : '#94A3B8', fontSize: '9px', marginTop: '2px', fontWeight: 500 }}>{item.label}</span>
+          <div style={{ textAlign: 'right' }}>
+            <p style={{ color: '#94A3B8', fontSize: '11px', margin: 0 }}>550 XP to</p>
+            <p style={{ color: '#94A3B8', fontSize: '11px', margin: 0 }}>next</p>
           </div>
-        ))}
+        </div>
       </div>
+
+      {/* LIVE Status Bar */}
+      <div style={{
+        background: '#1E293B',
+        borderRadius: '12px',
+        padding: '12px 16px',
+        marginBottom: '16px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ width: '8px', height: '8px', background: '#10B981', borderRadius: '50%' }} />
+          <span style={{ color: '#10B981', fontSize: '12px', fontWeight: 600 }}>LIVE</span>
+        </div>
+        <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: '#94A3B8' }}>
+          <span><Users size={12} style={{ display: 'inline', marginRight: '4px' }} />12 on shift</span>
+          <span><Clock size={12} style={{ display: 'inline', marginRight: '4px' }} />3 On Break</span>
+          <span><Calendar size={12} style={{ display: 'inline', marginRight: '4px' }} />5 open</span>
+        </div>
+      </div>
+
+      {/* Certificate Alert */}
+      <div style={{
+        background: '#FFF7ED',
+        borderLeft: '4px solid #F97316',
+        borderRadius: '0 12px 12px 0',
+        padding: '12px 16px',
+        marginBottom: '16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#FFEDD5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Shield size={18} color="#F97316" />
+          </div>
+          <div>
+            <p style={{ color: '#1E293B', fontSize: '13px', fontWeight: 500, margin: 0 }}>Food Safety Certificate</p>
+            <p style={{ color: '#F97316', fontSize: '12px', margin: 0 }}>Expires in 5 days</p>
+          </div>
+        </div>
+        <ChevronRight size={18} color="#94A3B8" />
+      </div>
+
+      {/* Today's Shift */}
+      <div style={{ marginBottom: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <p style={{ color: '#1E293B', fontSize: '16px', fontWeight: 600, margin: 0 }}>Today's Shift</p>
+          <span style={{ color: '#F97316', fontSize: '13px' }}>See All</span>
+        </div>
+        <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: '16px',
+          border: '1px solid #E2E8F0'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                <div style={{ width: '8px', height: '8px', background: '#10B981', borderRadius: '50%' }} />
+                <span style={{ color: '#64748B', fontSize: '12px' }}>Scheduled</span>
+              </div>
+              <p style={{ color: '#1E293B', fontSize: '16px', fontWeight: 600, margin: 0 }}>Senior Server</p>
+            </div>
+            <span style={{ background: '#F1F5F9', color: '#64748B', fontSize: '12px', padding: '4px 10px', borderRadius: '8px' }}>8h</span>
+          </div>
+          <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: '#64748B', marginBottom: '12px' }}>
+            <span><Clock size={14} style={{ display: 'inline', marginRight: '4px' }} />9:00am - 5:00pm</span>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', fontSize: '13px', color: '#64748B' }}>
+            <MapPin size={14} />
+            <span>The Grand Hotel - Main Restaurant</span>
+          </div>
+          <button style={{
+            width: '100%',
+            marginTop: '16px',
+            padding: '14px',
+            background: '#F97316',
+            color: 'white',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '14px',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            <Clock size={16} /> Clock In
+          </button>
+        </div>
+      </div>
+
+      <WorkerBottomNav active="Home" />
+    </div>
+  </MobileFrame>
+);
+
+// Mobile: Career Path Screen - Matches worker_career_path.jpeg
+const MobileCareerScreen = () => (
+  <MobileFrame>
+    <div style={{ height: '100%', background: '#F8FAFC', padding: '44px 16px 80px', overflowY: 'auto' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '8px' }}>
+        <p style={{ color: '#F97316', fontSize: '13px', margin: '0 0 4px' }}>← Back</p>
+        <p style={{ color: '#1E293B', fontSize: '22px', fontWeight: 700, margin: 0 }}>Career Path</p>
+        <p style={{ color: '#64748B', fontSize: '13px', marginTop: '4px' }}>Your Career Path</p>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '24px', marginBottom: '16px', borderBottom: '2px solid #E2E8F0' }}>
+        <span style={{ color: '#F97316', fontSize: '14px', fontWeight: 500, paddingBottom: '8px', borderBottom: '2px solid #F97316', marginBottom: '-2px' }}>Career Path</span>
+        <span style={{ color: '#64748B', fontSize: '14px', paddingBottom: '8px' }}>Skills</span>
+        <span style={{ color: '#64748B', fontSize: '14px', paddingBottom: '8px' }}>Training</span>
+      </div>
+
+      {/* Current Role Card - Orange gradient */}
+      <div style={{
+        background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+        borderRadius: '16px',
+        padding: '20px',
+        marginBottom: '20px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Building2 size={20} color="white" />
+          </div>
+          <div>
+            <p style={{ color: 'white', fontSize: '18px', fontWeight: 600, margin: 0 }}>Floor Associate</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', margin: 0 }}>Level 2 • Since March 2025</p>
+          </div>
+        </div>
+        <div style={{ marginBottom: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>↗ Momentum Score</span>
+            <span style={{ color: 'white', fontSize: '18px', fontWeight: 700 }}>85</span>
+          </div>
+          <div style={{ height: '6px', background: 'rgba(255,255,255,0.3)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ width: '85%', height: '100%', background: 'white' }} />
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ flex: 1, background: 'rgba(255,255,255,0.2)', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+            <p style={{ color: 'white', fontSize: '18px', fontWeight: 700, margin: 0 }}>5,300</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '11px', margin: 0 }}>Total XP</p>
+          </div>
+          <div style={{ flex: 1, background: 'rgba(255,255,255,0.2)', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+            <p style={{ color: 'white', fontSize: '18px', fontWeight: 700, margin: 0 }}>9</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '11px', margin: 0 }}>Verified</p>
+          </div>
+          <div style={{ flex: 1, background: 'rgba(255,255,255,0.2)', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+            <p style={{ color: 'white', fontSize: '18px', fontWeight: 700, margin: 0 }}>1</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '11px', margin: 0 }}>Courses</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Progress to Next Role */}
+      <p style={{ color: '#1E293B', fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>Progress to Next Role</p>
+      <div style={{
+        background: 'white',
+        borderRadius: '16px',
+        padding: '16px',
+        border: '1px solid #E2E8F0',
+        borderLeft: '4px solid #F97316'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <p style={{ color: '#1E293B', fontSize: '16px', fontWeight: 600, margin: 0 }}>Senior Floor Associate</p>
+            <p style={{ color: '#F97316', fontSize: '13px', margin: '4px 0' }}>£13-15/hr</p>
+            <p style={{ color: '#10B981', fontSize: '12px', margin: 0 }}>Ready now</p>
+          </div>
+          <span style={{ background: '#DCFCE7', color: '#16A34A', fontSize: '13px', fontWeight: 600, padding: '4px 10px', borderRadius: '8px' }}>92%</span>
+        </div>
+        <div style={{ marginTop: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <Check size={14} color="#10B981" />
+            <span style={{ color: '#10B981', fontSize: '13px' }}>Customer Service</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Check size={14} color="#10B981" />
+            <span style={{ color: '#10B981', fontSize: '13px' }}>Cash Handling</span>
+          </div>
+        </div>
+      </div>
+
+      <WorkerBottomNav active="Career" />
     </div>
   </MobileFrame>
 );
@@ -610,102 +721,308 @@ const MobileFeedScreen = () => (
   </MobileFrame>
 );
 
-// Mobile: Rewards Screen (Light Mode - Matches Actual App)
+// Mobile: Rewards Screen - Matches worker_rewards.jpeg exactly
 const MobileRewardsScreen = () => (
   <MobileFrame>
-    <div style={{ height: '100%', background: '#FFFFFF', padding: '48px 16px 80px', overflowY: 'auto' }}>
+    <div style={{ height: '100%', background: '#F8FAFC', overflowY: 'auto' }}>
+      {/* Dark Header Section */}
+      <div style={{ background: '#1E293B', padding: '44px 16px 20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+          <span style={{ color: '#F97316', fontSize: '13px' }}>← Back</span>
+          <p style={{ color: 'white', fontSize: '18px', fontWeight: 600, margin: 0, flex: 1, textAlign: 'center' }}>Rewards</p>
+          <div style={{ width: '40px' }} />
+        </div>
+        <p style={{ color: '#F97316', fontSize: '13px', textAlign: 'center', margin: 0 }}>Grand Metro Hotels Perks</p>
+
+        {/* Level Progress */}
+        <div style={{ background: '#334155', borderRadius: '12px', padding: '14px', marginTop: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Award size={16} color="#F97316" />
+              <span style={{ color: '#F97316', fontWeight: 600, fontSize: '14px' }}>Gold</span>
+            </div>
+            <span style={{ color: '#94A3B8', fontSize: '12px' }}>Level 3</span>
+          </div>
+          <div style={{ height: '6px', background: '#475569', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ width: '70%', height: '100%', background: '#F97316' }} />
+          </div>
+          <p style={{ color: '#94A3B8', fontSize: '11px', textAlign: 'right', margin: '6px 0 0' }}>520 pts to Platinum</p>
+        </div>
+
+        {/* Stats Row */}
+        <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+          <div style={{ flex: 1, background: '#F97316', borderRadius: '12px', padding: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <Star size={16} color="white" />
+            </div>
+            <p style={{ color: 'white', fontSize: '22px', fontWeight: 700, margin: 0 }}>1,980</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '11px', margin: 0 }}>Available Points</p>
+          </div>
+          <div style={{ flex: 1, background: '#10B981', borderRadius: '12px', padding: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <TrendingUp size={16} color="white" />
+            </div>
+            <p style={{ color: 'white', fontSize: '22px', fontWeight: 700, margin: 0 }}>£848</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '11px', margin: 0 }}>Total Saved</p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+          <button style={{ flex: 1, background: '#F97316', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            % Perks & Discounts
+          </button>
+          <button style={{ flex: 1, background: '#475569', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            <Building2 size={14} /> Redeem Points
+          </button>
+        </div>
+      </div>
+
+      {/* Light Content Section */}
+      <div style={{ padding: '16px 16px 80px' }}>
+        {/* Filter Tabs */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+          {['All', 'Dining', 'Shopping', 'Entertainment'].map((tab, i) => (
+            <span key={i} style={{
+              padding: '8px 14px',
+              borderRadius: '20px',
+              fontSize: '12px',
+              fontWeight: 500,
+              background: i === 0 ? '#F97316' : 'white',
+              color: i === 0 ? 'white' : '#64748B',
+              border: i === 0 ? 'none' : '1px solid #E2E8F0'
+            }}>{tab}</span>
+          ))}
+        </div>
+
+        {/* Featured Offers */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <p style={{ color: '#1E293B', fontSize: '16px', fontWeight: 600, margin: 0 }}>Featured Offers</p>
+          <span style={{ color: '#F97316', fontSize: '13px' }}>29+ perks</span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+          {[
+            { logo: 'T', name: 'Tesco', discount: '7% OFF', desc: 'Up to 7% off groceries with eGift...', color: '#1D4ED8' },
+            { logo: 'O', name: 'Odeon', discount: '25% OFF', desc: '25% off cinema tickets, any day', color: '#BE185D' }
+          ].map((offer, i) => (
+            <div key={i} style={{ flex: 1, background: 'white', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0' }}>
+              <div style={{ position: 'relative', marginBottom: '12px' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: offer.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ color: 'white', fontSize: '20px', fontWeight: 700 }}>{offer.logo}</span>
+                </div>
+                <span style={{ position: 'absolute', top: '-4px', right: '0', background: '#10B981', color: 'white', fontSize: '10px', fontWeight: 600, padding: '3px 8px', borderRadius: '6px' }}>{offer.discount}</span>
+              </div>
+              <p style={{ color: '#1E293B', fontSize: '14px', fontWeight: 600, margin: '0 0 4px' }}>{offer.name}</p>
+              <p style={{ color: '#64748B', fontSize: '11px', margin: '0 0 12px' }}>{offer.desc}</p>
+              <button style={{ width: '100%', background: '#FFF7ED', color: '#F97316', border: 'none', borderRadius: '8px', padding: '10px', fontSize: '12px', fontWeight: 600 }}>Get Perk</button>
+            </div>
+          ))}
+        </div>
+
+        <p style={{ color: '#1E293B', fontSize: '16px', fontWeight: 600, margin: '0 0 12px' }}>All Perks & Discounts</p>
+      </div>
+
+      <WorkerBottomNav active="Career" />
+    </div>
+  </MobileFrame>
+);
+
+// Mobile: Schedule Screen - Matches worker_schedule.jpeg exactly
+const MobileScheduleScreen = () => (
+  <MobileFrame>
+    <div style={{ height: '100%', background: '#F8FAFC', padding: '44px 16px 80px', overflowY: 'auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <p style={{ color: '#0F172A', fontSize: '20px', fontWeight: 600, margin: 0 }}>Rewards</p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#FEF3C7', padding: '6px 10px', borderRadius: '8px' }}>
-          <Zap size={14} color="#D97706" />
-          <span style={{ color: '#D97706', fontSize: '12px', fontWeight: 600 }}>12 day streak</span>
+        <div>
+          <p style={{ color: '#1E293B', fontSize: '22px', fontWeight: 700, margin: 0 }}>My Schedule</p>
+          <p style={{ color: '#64748B', fontSize: '13px', margin: '4px 0 0' }}>26 Jan - 1 Feb</p>
+        </div>
+        <div style={{ display: 'flex', background: '#E2E8F0', borderRadius: '10px', overflow: 'hidden' }}>
+          <span style={{ padding: '8px 14px', background: '#F97316', color: 'white', fontSize: '13px', fontWeight: 500 }}>Week</span>
+          <span style={{ padding: '8px 14px', color: '#64748B', fontSize: '13px' }}>Month</span>
         </div>
       </div>
-      
-      {/* Points Card */}
+
+      {/* Stats Row */}
+      <div style={{ display: 'flex', gap: '12px', background: 'white', borderRadius: '12px', padding: '14px', marginBottom: '16px', border: '1px solid #E2E8F0' }}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Clock size={18} color="#F97316" />
+          </div>
+          <div>
+            <p style={{ color: '#1E293B', fontSize: '18px', fontWeight: 700, margin: 0 }}>33h</p>
+            <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>This week</p>
+          </div>
+        </div>
+        <div style={{ width: '1px', background: '#E2E8F0' }} />
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Calendar size={18} color="#10B981" />
+          </div>
+          <div>
+            <p style={{ color: '#1E293B', fontSize: '18px', fontWeight: 700, margin: 0 }}>5</p>
+            <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>Upcoming</p>
+          </div>
+        </div>
+        <div style={{ width: '1px', background: '#E2E8F0' }} />
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#DBEAFE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Check size={18} color="#3B82F6" />
+          </div>
+          <div>
+            <p style={{ color: '#1E293B', fontSize: '18px', fontWeight: 700, margin: 0 }}>5</p>
+            <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>Confirmed</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Week Navigation */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+        <ChevronLeft size={20} color="#94A3B8" />
+        <span style={{ color: '#F97316', fontSize: '14px', fontWeight: 500 }}>Today</span>
+        <ChevronRight size={20} color="#94A3B8" />
+      </div>
+
+      {/* Week Days */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+        {[
+          { day: 'Mon', date: 26, month: 'Jan', dot: '#EF4444' },
+          { day: 'Tue', date: 27, month: 'Jan', dot: '#3B82F6' },
+          { day: 'Wed', date: 28, month: 'Jan', dot: '#10B981' },
+          { day: 'Thu', date: 29, month: 'Jan', dot: '#F59E0B' },
+          { day: 'Fri', date: 30, month: 'Jan', dot: null }
+        ].map((d, i) => (
+          <div key={i} style={{
+            flex: 1,
+            textAlign: 'center',
+            padding: '10px 6px',
+            borderRadius: '12px',
+            background: 'white',
+            border: '1px solid #E2E8F0'
+          }}>
+            <p style={{ fontSize: '11px', color: '#64748B', margin: 0 }}>{d.day}</p>
+            <p style={{ fontSize: '18px', fontWeight: 600, color: '#1E293B', margin: '4px 0' }}>{d.date}</p>
+            <p style={{ fontSize: '10px', color: '#64748B', margin: 0 }}>{d.month}</p>
+            {d.dot && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: d.dot, margin: '6px auto 0' }} />}
+          </div>
+        ))}
+      </div>
+
+      {/* Action Buttons */}
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+        <button style={{ flex: 1, background: '#F97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+          <Clock size={16} /> Clock In
+        </button>
+        <button style={{ flex: 1, background: 'white', color: '#F97316', border: '2px solid #F97316', borderRadius: '12px', padding: '14px', fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+          <Calendar size={16} /> Request Time Off
+        </button>
+      </div>
+
+      {/* Upcoming Shifts */}
+      <p style={{ fontWeight: 600, fontSize: '16px', color: '#1E293B', marginBottom: '12px' }}>Upcoming Shifts</p>
       <div style={{
-        background: 'linear-gradient(135deg, #FF6B35 0%, #F59E0B 100%)',
+        background: 'white',
+        borderRadius: '16px',
+        padding: '16px',
+        border: '1px solid #E2E8F0',
+        borderLeft: '4px solid #3B82F6'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+          <div>
+            <span style={{ background: '#DBEAFE', color: '#3B82F6', fontSize: '11px', fontWeight: 500, padding: '4px 8px', borderRadius: '6px' }}>Front of House</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+              <Check size={14} color="#10B981" />
+              <span style={{ color: '#10B981', fontSize: '12px', fontWeight: 500 }}>Confirmed</span>
+            </div>
+          </div>
+        </div>
+        <p style={{ color: '#1E293B', fontSize: '16px', fontWeight: 600, margin: '0 0 8px' }}>Senior Server</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '13px', color: '#64748B' }}>
+          <span><Calendar size={14} style={{ display: 'inline', marginRight: '4px' }} />25 Jan (Sun)</span>
+          <span><Clock size={14} style={{ display: 'inline', marginRight: '4px' }} />09:00 - 17:00</span>
+          <span style={{ background: '#F1F5F9', padding: '2px 8px', borderRadius: '6px' }}>8h</span>
+        </div>
+        <div style={{ height: '4px', background: '#E2E8F0', borderRadius: '2px', marginTop: '12px', overflow: 'hidden' }}>
+          <div style={{ width: '20%', height: '100%', background: '#3B82F6' }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px', fontSize: '11px', color: '#94A3B8' }}>
+          <span>09:00</span>
+          <span>17:00</span>
+        </div>
+      </div>
+
+      <WorkerBottomNav active="Schedule" />
+    </div>
+  </MobileFrame>
+);
+
+// Mobile: Manager Team Screen (for Manager App section)
+const MobileManagerScreen = () => (
+  <MobileFrame>
+    <div style={{ height: '100%', background: '#FFFFFF', padding: '48px 16px 80px' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '20px' }}>
+        <p style={{ color: '#64748B', fontSize: '14px', margin: 0 }}>Good morning</p>
+        <p style={{ color: '#0F172A', fontSize: '22px', fontWeight: 600, margin: '4px 0 0' }}>James Wilson</p>
+      </div>
+
+      {/* Today Overview Card */}
+      <div style={{
+        background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
         borderRadius: '20px',
         padding: '20px',
-        marginBottom: '16px',
-        position: 'relative',
-        overflow: 'hidden'
+        marginBottom: '16px'
       }}>
-        <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '120px', height: '120px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-          <div>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', margin: 0 }}>Available Points</p>
-            <p style={{ color: 'white', fontSize: '38px', fontWeight: 700, margin: '2px 0', letterSpacing: '-1px' }}>1,980</p>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '11px', margin: 0 }}>Lifetime: 4,250 pts</p>
-          </div>
-          <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '12px', padding: '10px 14px', textAlign: 'center' }}>
-            <Award size={22} color="white" />
-            <p style={{ color: 'white', fontSize: '11px', margin: '4px 0 0', fontWeight: 600 }}>Gold Level</p>
-          </div>
+        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '13px', margin: 0 }}>Today's Team</p>
+        <p style={{ color: 'white', fontSize: '36px', fontWeight: 700, margin: '4px 0 8px' }}>8 / 10</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <CheckCircle2 size={14} color="white" />
+          <span style={{ color: 'white', fontSize: '13px' }}>2 pending requests</span>
         </div>
       </div>
-      
-      {/* Filter Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', overflowX: 'auto' }}>
-        {['All', 'Vouchers', 'Time Off', 'Merch'].map((tab, i) => (
-          <span key={i} style={{
-            padding: '8px 14px',
-            borderRadius: '20px',
-            fontSize: '12px',
-            fontWeight: 500,
-            background: i === 0 ? '#FF6B35' : '#F8FAFC',
-            color: i === 0 ? 'white' : '#64748B',
-            border: i === 0 ? 'none' : '1px solid #E2E8F0',
-            whiteSpace: 'nowrap'
-          }}>{tab}</span>
-        ))}
-      </div>
-      
-      {/* Featured Reward */}
-      <div style={{ background: 'linear-gradient(135deg, #F0FDF4, #ECFDF5)', borderRadius: '16px', padding: '14px', marginBottom: '12px', border: '1px solid #BBF7D0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ width: '48px', height: '48px', minWidth: '48px', flexShrink: 0, borderRadius: '12px', background: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Clock size={24} color="white" />
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px', flexWrap: 'wrap' }}>
-              <p style={{ fontWeight: 600, fontSize: '14px', color: '#0F172A', margin: 0 }}>Extra Day Off</p>
-              <span style={{ background: '#10B981', color: 'white', fontSize: '9px', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>POPULAR</span>
-            </div>
-            <p style={{ fontSize: '11px', color: '#64748B', margin: 0 }}>Full day paid time off</p>
-            <p style={{ fontSize: '13px', color: '#10B981', margin: '4px 0 0', fontWeight: 700 }}>2,000 pts</p>
-          </div>
-          <button style={{ background: '#10B981', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 600, flexShrink: 0, whiteSpace: 'nowrap' }}>Redeem</button>
+
+      {/* Quick Actions */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+        <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
+          <CheckCircle2 size={24} color="#3B82F6" style={{ marginBottom: '8px' }} />
+          <p style={{ color: '#0F172A', fontSize: '14px', fontWeight: 600, margin: 0 }}>Approvals</p>
+          <p style={{ color: '#3B82F6', fontSize: '12px', margin: '4px 0 0' }}>2 pending</p>
+        </div>
+        <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
+          <Calendar size={24} color="#3B82F6" style={{ marginBottom: '8px' }} />
+          <p style={{ color: '#0F172A', fontSize: '14px', fontWeight: 600, margin: 0 }}>Schedule</p>
+          <p style={{ color: '#64748B', fontSize: '12px', margin: '4px 0 0' }}>View rota</p>
         </div>
       </div>
-      
-      {/* Rewards List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+      {/* Team Today */}
+      <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <span style={{ color: '#0F172A', fontSize: '14px', fontWeight: 600 }}>Team Today</span>
+          <span style={{ color: '#3B82F6', fontSize: '13px' }}>View all</span>
+        </div>
         {[
-          { name: '£20 Amazon', desc: 'Digital gift card', points: 500, icon: DollarSign, color: '#3B82F6', affordable: true },
-          { name: '£10 Coffee Shop', desc: 'Costa or Starbucks', points: 250, icon: Star, color: '#8B5CF6', affordable: true },
-          { name: 'Cinema Tickets x2', desc: 'Any Odeon cinema', points: 400, icon: Star, color: '#EC4899', affordable: true },
-          { name: 'Company Hoodie', desc: 'Premium branded', points: 600, icon: Award, color: '#F59E0B', affordable: true },
-          { name: '£50 Voucher', desc: 'High street shops', points: 1200, icon: DollarSign, color: '#10B981', affordable: true }
-        ].map((reward, i) => (
-          <div key={i} style={{ background: '#F8FAFC', borderRadius: '14px', padding: '12px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid #E2E8F0' }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: `${reward.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <reward.icon size={22} color={reward.color} />
+          { name: 'Sarah M.', role: 'Sales Associate', status: 'On shift', statusColor: '#10B981' },
+          { name: 'Tom K.', role: 'Cashier', status: 'Starting 10am', statusColor: '#F59E0B' },
+          { name: 'Emma L.', role: 'Stock', status: 'On break', statusColor: '#64748B' }
+        ].map((member, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: i > 0 ? '10px' : 0, marginTop: i > 0 ? '10px' : 0, borderTop: i > 0 ? '1px solid #E2E8F0' : 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#DBEAFE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <User size={16} color="#3B82F6" />
+              </div>
+              <div>
+                <p style={{ color: '#0F172A', fontSize: '14px', fontWeight: 500, margin: 0 }}>{member.name}</p>
+                <p style={{ color: '#64748B', fontSize: '12px', margin: 0 }}>{member.role}</p>
+              </div>
             </div>
-            <div style={{ flex: 1 }}>
-              <p style={{ fontWeight: 600, fontSize: '13px', color: '#0F172A', margin: 0 }}>{reward.name}</p>
-              <p style={{ fontSize: '11px', color: '#64748B', margin: '1px 0 0' }}>{reward.desc}</p>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ fontSize: '13px', color: '#FF6B35', fontWeight: 700, margin: 0 }}>{reward.points} pts</p>
-              {reward.affordable && <Check size={14} color="#10B981" style={{ marginTop: '2px' }} />}
-            </div>
+            <span style={{ color: member.statusColor, fontSize: '12px', fontWeight: 500 }}>{member.status}</span>
           </div>
         ))}
       </div>
-      
-      {/* Bottom Nav - 7 tabs */}
+
+      {/* Manager Bottom Nav - 5 tabs */}
       <div style={{
         position: 'absolute',
         bottom: 0,
@@ -713,22 +1030,20 @@ const MobileRewardsScreen = () => (
         right: 0,
         background: '#FFFFFF',
         borderTop: '1px solid #E2E8F0',
-        padding: '8px 8px 20px',
+        padding: '8px 16px 20px',
         display: 'flex',
         justifyContent: 'space-around'
       }}>
         {[
-          { icon: Home, label: 'Home', active: false },
-          { icon: MessageSquare, label: 'Feed', active: false },
+          { icon: Home, label: 'Home', active: true },
+          { icon: Users, label: 'Team', active: false },
           { icon: Calendar, label: 'Schedule', active: false },
-          { icon: FileCheck, label: 'Tasks', active: false },
-          { icon: Target, label: 'Career', active: false },
-          { icon: Award, label: 'Rewards', active: true },
-          { icon: User, label: 'Profile', active: false }
+          { icon: CheckCircle2, label: 'Approvals', active: false },
+          { icon: BarChart3, label: 'Insights', active: false }
         ].map((item, i) => (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <item.icon size={20} color={item.active ? '#FF6B35' : '#94A3B8'} />
-            <span style={{ color: item.active ? '#FF6B35' : '#94A3B8', fontSize: '9px', marginTop: '2px', fontWeight: 500 }}>{item.label}</span>
+            <item.icon size={22} color={item.active ? '#3B82F6' : '#94A3B8'} />
+            <span style={{ color: item.active ? '#3B82F6' : '#94A3B8', fontSize: '10px', marginTop: '4px', fontWeight: 500 }}>{item.label}</span>
           </div>
         ))}
       </div>
@@ -736,83 +1051,69 @@ const MobileRewardsScreen = () => (
   </MobileFrame>
 );
 
-// Mobile: Schedule Screen (Light Mode)
-const MobileScheduleScreen = () => (
+// Mobile: Manager Approvals Screen
+const MobileManagerApprovalsScreen = () => (
   <MobileFrame>
     <div style={{ height: '100%', background: '#FFFFFF', padding: '48px 16px 80px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <p style={{ color: '#0F172A', fontSize: '20px', fontWeight: 600, margin: 0 }}>My Schedule</p>
-        <div style={{ background: '#F8FAFC', borderRadius: '8px', padding: '6px 12px', border: '1px solid #E2E8F0' }}>
-          <span style={{ fontSize: '13px', color: '#0F172A', fontWeight: 500 }}>Jan 2026</span>
-        </div>
+      <div style={{ marginBottom: '20px' }}>
+        <p style={{ color: '#0F172A', fontSize: '20px', fontWeight: 600, margin: 0 }}>Approvals</p>
+        <p style={{ color: '#64748B', fontSize: '13px', marginTop: '4px' }}>2 pending requests</p>
       </div>
-      
-      {/* Week Selector */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
-        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => {
-          const isToday = i === 4; // Friday
-          const hasShift = [0, 1, 2, 3, 4].includes(i);
-          return (
-            <div key={i} style={{
-              flex: 1,
-              textAlign: 'center',
-              padding: '8px 4px',
-              borderRadius: '10px',
-              background: isToday ? '#FF6B35' : hasShift ? '#FFF7ED' : '#F8FAFC',
-              border: isToday ? 'none' : '1px solid #E2E8F0'
-            }}>
-              <p style={{ fontSize: '10px', color: isToday ? 'rgba(255,255,255,0.8)' : '#64748B', margin: 0 }}>{day}</p>
-              <p style={{ fontSize: '14px', fontWeight: 600, color: isToday ? 'white' : '#0F172A', margin: '2px 0 0' }}>{6 + i}</p>
-              {hasShift && <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: isToday ? 'white' : '#FF6B35', margin: '4px auto 0' }} />}
-            </div>
-          );
-        })}
+
+      {/* Filter Tabs */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+        {['All', 'Time Off', 'Swaps', 'Overtime'].map((tab, i) => (
+          <div key={i} style={{
+            background: i === 0 ? '#3B82F6' : '#F8FAFC',
+            color: i === 0 ? 'white' : '#64748B',
+            padding: '8px 14px',
+            borderRadius: '20px',
+            fontSize: '13px',
+            fontWeight: 500,
+            border: i === 0 ? 'none' : '1px solid #E2E8F0'
+          }}>{tab}</div>
+        ))}
       </div>
-      
-      {/* Today's Shifts */}
-      <div style={{ marginBottom: '16px' }}>
-        <p style={{ fontWeight: 600, fontSize: '14px', color: '#0F172A', marginBottom: '10px' }}>Today - Friday 10 Jan</p>
-        <div style={{
-          background: 'linear-gradient(90deg, #FF6B35, #E55A2B)',
-          borderRadius: '16px',
-          padding: '16px',
-          color: 'white'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
-            <div>
-              <p style={{ fontWeight: 600, fontSize: '16px', margin: 0 }}>09:00 - 17:00</p>
-              <p style={{ fontSize: '13px', opacity: 0.9, margin: '4px 0 0' }}>Oxford Street Store</p>
-            </div>
-            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>8h</span>
-          </div>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button style={{ flex: 1, background: 'white', color: '#FF6B35', border: 'none', borderRadius: '10px', padding: '10px', fontWeight: 600, fontSize: '13px' }}>Clock In</button>
-            <button style={{ flex: 1, background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', borderRadius: '10px', padding: '10px', fontWeight: 600, fontSize: '13px' }}>View Details</button>
-          </div>
-        </div>
-      </div>
-      
-      {/* Upcoming Shifts */}
-      <div>
-        <p style={{ fontWeight: 600, fontSize: '14px', color: '#0F172A', marginBottom: '10px' }}>Upcoming</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {[
-            { day: 'Sat 11 Jan', time: '10:00 - 18:00', location: 'Regent Street', hours: '8h' },
-            { day: 'Mon 13 Jan', time: '09:00 - 17:00', location: 'Oxford Street', hours: '8h' }
-          ].map((shift, i) => (
-            <div key={i} style={{ background: '#F8FAFC', borderRadius: '12px', padding: '14px', border: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <p style={{ fontWeight: 500, fontSize: '14px', color: '#0F172A', margin: 0 }}>{shift.day}</p>
-                <p style={{ fontSize: '13px', color: '#64748B', margin: '2px 0 0' }}>{shift.time} • {shift.location}</p>
+
+      {/* Approval Cards */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {[
+          { name: 'Sarah Mitchell', type: 'Time Off Request', details: 'Mon 20 Jan - Wed 22 Jan', reason: 'Family event', urgent: false },
+          { name: 'Tom Kennedy', type: 'Shift Swap', details: 'Swap Sat 18 Jan with Emma', reason: 'Doctor appointment', urgent: true }
+        ].map((request, i) => (
+          <div key={i} style={{
+            background: '#F8FAFC',
+            borderRadius: '16px',
+            padding: '16px',
+            border: request.urgent ? '1px solid #FCD34D' : '1px solid #E2E8F0'
+          }}>
+            {request.urgent && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                <AlertCircle size={14} color="#F59E0B" />
+                <span style={{ color: '#D97706', fontSize: '12px', fontWeight: 500 }}>Needs response soon</span>
               </div>
-              <span style={{ background: '#E2E8F0', padding: '4px 10px', borderRadius: '8px', fontSize: '12px', color: '#475569' }}>{shift.hours}</span>
+            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#DBEAFE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <User size={18} color="#3B82F6" />
+              </div>
+              <div>
+                <p style={{ color: '#0F172A', fontSize: '15px', fontWeight: 600, margin: 0 }}>{request.name}</p>
+                <p style={{ color: '#3B82F6', fontSize: '12px', margin: 0 }}>{request.type}</p>
+              </div>
             </div>
-          ))}
-        </div>
+            <p style={{ color: '#0F172A', fontSize: '14px', margin: '0 0 4px' }}>{request.details}</p>
+            <p style={{ color: '#64748B', fontSize: '13px', margin: '0 0 12px' }}>{request.reason}</p>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button style={{ flex: 1, background: '#10B981', color: 'white', border: 'none', borderRadius: '10px', padding: '10px', fontWeight: 600, fontSize: '13px' }}>Approve</button>
+              <button style={{ flex: 1, background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '10px', fontWeight: 600, fontSize: '13px' }}>Decline</button>
+            </div>
+          </div>
+        ))}
       </div>
-      
-      {/* Bottom Nav - 7 tabs */}
+
+      {/* Manager Bottom Nav - 5 tabs */}
       <div style={{
         position: 'absolute',
         bottom: 0,
@@ -820,22 +1121,20 @@ const MobileScheduleScreen = () => (
         right: 0,
         background: '#FFFFFF',
         borderTop: '1px solid #E2E8F0',
-        padding: '8px 8px 20px',
+        padding: '8px 16px 20px',
         display: 'flex',
         justifyContent: 'space-around'
       }}>
         {[
           { icon: Home, label: 'Home', active: false },
-          { icon: MessageSquare, label: 'Feed', active: false },
-          { icon: Calendar, label: 'Schedule', active: true },
-          { icon: FileCheck, label: 'Tasks', active: false },
-          { icon: Target, label: 'Career', active: false },
-          { icon: Award, label: 'Rewards', active: false },
-          { icon: User, label: 'Profile', active: false }
+          { icon: Users, label: 'Team', active: false },
+          { icon: Calendar, label: 'Schedule', active: false },
+          { icon: CheckCircle2, label: 'Approvals', active: true },
+          { icon: BarChart3, label: 'Insights', active: false }
         ].map((item, i) => (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <item.icon size={20} color={item.active ? '#FF6B35' : '#94A3B8'} />
-            <span style={{ color: item.active ? '#FF6B35' : '#94A3B8', fontSize: '9px', marginTop: '2px', fontWeight: 500 }}>{item.label}</span>
+            <item.icon size={22} color={item.active ? '#3B82F6' : '#94A3B8'} />
+            <span style={{ color: item.active ? '#3B82F6' : '#94A3B8', fontSize: '10px', marginTop: '4px', fontWeight: 500 }}>{item.label}</span>
           </div>
         ))}
       </div>
@@ -885,135 +1184,220 @@ const BrowserFrame = ({ children, className = "", url = "portal.uplifthq.co.uk" 
   </div>
 );
 
-// Portal: People Hub - FULL VERSION (More Powerful)
+// Screenshot-based Portal Components (using real product screenshots)
+const PortalScreenshot = ({ src, alt }) => (
+  <BrowserFrame url="app.uplifthq.co.uk">
+    <div style={{ position: 'relative', width: '100%', aspectRatio: '16/10', overflow: 'hidden' }}>
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'top left'
+        }}
+      />
+    </div>
+  </BrowserFrame>
+);
+
+const PortalScheduleScreenshot = () => (
+  <PortalScreenshot src="/screenshots/portal_schedule.png" alt="AI-powered scheduling" />
+);
+
+const PortalIntegrationsScreenshot = () => (
+  <PortalScreenshot src="/screenshots/portal_integrations.png" alt="Integrations hub" />
+);
+
+// Portal: Dashboard - Matches portal_dashboard.png exactly
 const PortalDashboard = () => (
-  <BrowserFrame url="portal.uplifthq.co.uk/people">
+  <BrowserFrame url="portal.uplifthq.co.uk/dashboard">
     <div style={{ display: 'flex', height: '480px' }}>
-      {/* Sidebar */}
-      <div style={{ width: '64px', background: '#0F172A', padding: '16px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-        <RisingULogo variant="mark" size={32} />
-        <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {[BarChart3, Users, Calendar, Award, Briefcase, Link2, Settings].map((Icon, i) => (
+      {/* Sidebar - Dark with Uplift logo */}
+      <div style={{ width: '200px', background: '#1E293B', padding: '16px', display: 'flex', flexDirection: 'column' }}>
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+          <div style={{ width: '32px', height: '32px', background: '#F97316', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: 'white', fontWeight: 700, fontSize: '16px' }}>U</span>
+          </div>
+          <span style={{ color: 'white', fontSize: '18px', fontWeight: 600 }}>Uplift</span>
+        </div>
+
+        {/* Nav Items */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {[
+            { icon: BarChart3, label: 'Dashboard', active: true },
+            { icon: Users, label: 'Employees', active: false },
+            { icon: Calendar, label: 'Schedule', active: false },
+            { icon: FileCheck, label: 'Templates', active: false },
+            { icon: Clock, label: 'Time Tracking', active: false },
+            { icon: Calendar, label: 'Time Off', active: false },
+            { icon: MapPin, label: 'Locations', active: false },
+            { icon: Award, label: 'Skills', badge: 'NEW', active: false },
+            { icon: Briefcase, label: 'Opportunities', badge: 'NEW', active: false },
+            { icon: FileText, label: 'Bulk Import', active: false },
+            { icon: Activity, label: 'Activity', badge: 'NEW', active: false },
+            { icon: BarChart3, label: 'Reports', active: false },
+            { icon: Link2, label: 'Integrations', active: false },
+            { icon: Settings, label: 'Settings', active: false }
+          ].map((item, i) => (
             <div key={i} style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              background: i === 1 ? 'rgba(255,107,53,0.2)' : 'transparent',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              gap: '10px',
+              padding: '8px 10px',
+              borderRadius: '8px',
+              background: item.active ? '#F97316' : 'transparent',
+              cursor: 'pointer'
             }}>
-              <Icon size={20} color={i === 1 ? '#FF6B35' : '#64748B'} />
+              <item.icon size={16} color={item.active ? 'white' : '#94A3B8'} />
+              <span style={{ color: item.active ? 'white' : '#94A3B8', fontSize: '13px', flex: 1 }}>{item.label}</span>
+              {item.badge && <span style={{ background: '#10B981', color: 'white', fontSize: '9px', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>{item.badge}</span>}
             </div>
           ))}
         </div>
       </div>
-      
+
       {/* Main Content */}
       <div style={{ flex: 1, background: '#F8FAFC', padding: '16px', overflowY: 'auto' }}>
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
-            <h1 style={{ fontSize: '18px', fontWeight: 600, color: '#0F172A', margin: 0 }}>People Hub</h1>
-            <p style={{ color: '#64748B', fontSize: '12px', marginTop: '2px' }}>156 employees • Oxford Street</p>
+            <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#1E293B', margin: 0 }}>Welcome back,</h1>
+            <p style={{ color: '#64748B', fontSize: '13px', marginTop: '2px' }}>Here's what's happening today</p>
           </div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <div style={{ background: 'white', borderRadius: '8px', padding: '8px 12px', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Search size={14} color="#64748B" />
-              <span style={{ fontSize: '12px', color: '#94A3B8' }}>Search employees...</span>
+          <button style={{ background: '#F97316', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 16px', fontWeight: 500, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Calendar size={16} /> Create Schedule
+          </button>
+        </div>
+
+        {/* LIVE Status Bar */}
+        <div style={{ background: '#1E293B', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ width: '8px', height: '8px', background: '#10B981', borderRadius: '50%' }} />
+            <span style={{ color: '#10B981', fontSize: '12px', fontWeight: 600 }}>LIVE</span>
+          </div>
+          <div style={{ display: 'flex', gap: '24px', fontSize: '12px', color: '#94A3B8' }}>
+            <span><Users size={12} style={{ display: 'inline', marginRight: '4px' }} /><strong style={{ color: 'white' }}>28</strong> On Shift</span>
+            <span><Clock size={12} style={{ display: 'inline', marginRight: '4px' }} /><strong style={{ color: 'white' }}>8</strong> On Break</span>
+            <span><Clock size={12} style={{ display: 'inline', marginRight: '4px' }} /><strong style={{ color: 'white' }}>2</strong> Just Clocked In</span>
+            <span><AlertCircle size={12} style={{ display: 'inline', marginRight: '4px' }} /><strong style={{ color: 'white' }}>2</strong> Running Late</span>
+            <span><Calendar size={12} style={{ display: 'inline', marginRight: '4px' }} /><strong style={{ color: 'white' }}>12</strong> Open Shifts</span>
+          </div>
+          <span style={{ marginLeft: 'auto', color: '#F97316', fontSize: '12px' }}>Activity Feed →</span>
+        </div>
+
+        {/* Alert Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '16px' }}>
+          <div style={{ background: '#FFF7ED', borderRadius: '10px', padding: '14px', borderLeft: '4px solid #F97316' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFEDD5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Shield size={16} color="#F97316" />
+              </div>
+              <div>
+                <p style={{ color: '#1E293B', fontSize: '13px', fontWeight: 500, margin: 0 }}>Certifications expiring soon</p>
+                <p style={{ color: '#F97316', fontSize: '11px', margin: 0 }}>3 employees - Click to see who</p>
+              </div>
             </div>
-            <button style={{ background: '#0F172A', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 14px', fontWeight: 500, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Plus size={14} /> Add Employee
-            </button>
+          </div>
+          <div style={{ background: '#DBEAFE', borderRadius: '10px', padding: '14px', borderLeft: '4px solid #3B82F6' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#BFDBFE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Play size={16} color="#3B82F6" />
+              </div>
+              <div>
+                <p style={{ color: '#1E293B', fontSize: '13px', fontWeight: 500, margin: 0 }}>Training in progress or pending</p>
+                <p style={{ color: '#3B82F6', fontSize: '11px', margin: 0 }}>3 employees - Click to see who</p>
+              </div>
+            </div>
+          </div>
+          <div style={{ background: '#FEF3C7', borderRadius: '10px', padding: '14px', borderLeft: '4px solid #F59E0B' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FDE68A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <AlertCircle size={16} color="#F59E0B" />
+              </div>
+              <div>
+                <p style={{ color: '#1E293B', fontSize: '13px', fontWeight: 500, margin: 0 }}>Probation reviews due</p>
+                <p style={{ color: '#F59E0B', fontSize: '11px', margin: 0 }}>1 employees - Click to see who</p>
+              </div>
+            </div>
           </div>
         </div>
-        
-        {/* Stats Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', marginBottom: '14px' }}>
+
+        {/* Stats Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
           {[
-            { label: 'Total', value: '156', color: '#3B82F6', icon: Users },
-            { label: 'Active Today', value: '42', color: '#10B981', icon: Calendar },
-            { label: 'On Leave', value: '8', color: '#8B5CF6', icon: Clock },
-            { label: 'At Risk', value: '3', color: '#EF4444', icon: AlertCircle },
-            { label: 'Ready for Promotion', value: '12', color: '#FF6B35', icon: TrendingUp }
+            { value: '24', label: "Today's Shifts", sub: '19 filled', icon: Calendar, color: '#3B82F6', bg: '#EFF6FF' },
+            { value: '8', label: 'Active Employees', sub: '+3 this week', icon: Users, color: '#10B981', bg: '#ECFDF5' },
+            { value: '5', label: 'Open Shifts', sub: null, icon: AlertCircle, color: '#F97316', bg: '#FFF7ED' },
+            { value: '15', label: 'Pending Approvals', sub: null, icon: Clock, color: '#EF4444', bg: '#FEF2F2' }
           ].map((stat, i) => (
-            <div key={i} style={{ background: 'white', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <p style={{ color: '#64748B', fontSize: '11px', margin: 0 }}>{stat.label}</p>
-                <stat.icon size={14} color={stat.color} />
+            <div key={i} style={{ background: 'white', borderRadius: '10px', padding: '16px', border: `1px solid ${stat.color}20` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: stat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <stat.icon size={18} color={stat.color} />
+                </div>
               </div>
-              <span style={{ fontSize: '22px', fontWeight: 700, color: '#0F172A' }}>{stat.value}</span>
+              <p style={{ fontSize: '28px', fontWeight: 700, color: '#1E293B', margin: 0 }}>{stat.value}</p>
+              <p style={{ fontSize: '12px', color: '#64748B', margin: '4px 0 0' }}>{stat.label}</p>
+              {stat.sub && <p style={{ fontSize: '11px', color: '#10B981', margin: '2px 0 0' }}>{stat.sub}</p>}
             </div>
           ))}
         </div>
-        
-        {/* Filter Tabs */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-          {['All Employees', 'Scheduled Today', 'At Risk', 'Ready for Promotion'].map((tab, i) => (
-            <span key={i} style={{
-              padding: '6px 12px',
-              borderRadius: '6px',
-              fontSize: '12px',
-              fontWeight: 500,
-              background: i === 0 ? '#0F172A' : 'white',
-              color: i === 0 ? 'white' : '#64748B',
-              border: i === 0 ? 'none' : '1px solid #E2E8F0',
-              cursor: 'pointer'
-            }}>{tab}</span>
-          ))}
-        </div>
-        
-        {/* Employee Table */}
-        <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #E2E8F0', overflow: 'hidden' }}>
-          {/* Table Header */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 80px', padding: '10px 14px', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B' }}>EMPLOYEE</span>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B' }}>ROLE</span>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B' }}>SKILLS</span>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B' }}>TENURE</span>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B' }}>STATUS</span>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748B' }}>ACTIONS</span>
-          </div>
-          
-          {/* Employee Rows */}
-          {[
-            { name: 'Sarah Mitchell', avatar: 'SM', role: 'Shift Supervisor', skills: 95, tenure: '2y 3m', status: 'promotion', statusLabel: 'Ready', color: '#FF6B35' },
-            { name: 'Emily Roberts', avatar: 'ER', role: 'Senior Associate', skills: 87, tenure: '1y 8m', status: 'active', statusLabel: 'Active', color: '#10B981' },
-            { name: 'James Taylor', avatar: 'JT', role: 'Associate', skills: 72, tenure: '11m', status: 'active', statusLabel: 'Active', color: '#10B981' },
-            { name: 'Alex Thompson', avatar: 'AT', role: 'Associate', skills: 65, tenure: '8m', status: 'training', statusLabel: 'Training', color: '#8B5CF6' },
-            { name: 'Lisa Chen', avatar: 'LC', role: 'Associate', skills: 45, tenure: '3m', status: 'risk', statusLabel: 'At Risk', color: '#EF4444' },
-            { name: 'David Park', avatar: 'DP', role: 'Team Lead', skills: 92, tenure: '3y 1m', status: 'active', statusLabel: 'Active', color: '#10B981' }
-          ].map((emp, i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 80px', padding: '12px 14px', borderBottom: i < 5 ? '1px solid #F1F5F9' : 'none', alignItems: 'center' }}>
-              {/* Employee */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: `linear-gradient(135deg, ${emp.color}, ${emp.color}99)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '11px', fontWeight: 600 }}>{emp.avatar}</div>
-                <span style={{ fontSize: '13px', fontWeight: 500, color: '#0F172A' }}>{emp.name}</span>
-              </div>
-              {/* Role */}
-              <span style={{ fontSize: '12px', color: '#64748B' }}>{emp.role}</span>
-              {/* Skills Progress */}
+
+        {/* Bottom Section */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '16px' }}>
+          {/* Live Activity */}
+          <div style={{ background: 'white', borderRadius: '10px', padding: '16px', border: '1px solid #E2E8F0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '50px', height: '6px', background: '#E2E8F0', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${emp.skills}%`, height: '100%', background: emp.skills >= 90 ? '#10B981' : emp.skills >= 70 ? '#3B82F6' : emp.skills >= 50 ? '#F59E0B' : '#EF4444', borderRadius: '3px' }} />
-                </div>
-                <span style={{ fontSize: '11px', color: '#64748B' }}>{emp.skills}%</span>
+                <Activity size={16} color="#F97316" />
+                <span style={{ fontWeight: 600, color: '#1E293B', fontSize: '14px' }}>Live Activity</span>
               </div>
-              {/* Tenure */}
-              <span style={{ fontSize: '12px', color: '#64748B' }}>{emp.tenure}</span>
-              {/* Status */}
-              <span style={{ fontSize: '11px', fontWeight: 500, color: emp.color, background: `${emp.color}15`, padding: '4px 8px', borderRadius: '4px', display: 'inline-block', width: 'fit-content' }}>{emp.statusLabel}</span>
-              {/* Actions */}
-              <div style={{ display: 'flex', gap: '6px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                  <Eye size={14} color="#64748B" />
+              <span style={{ color: '#94A3B8', fontSize: '11px' }}>Auto-updating</span>
+            </div>
+            {[
+              { avatar: 'SM', name: 'Sarah M.', action: 'clocked in', location: 'at Main Restaurant', time: '2 min ago' },
+              { avatar: 'JK', name: 'James K.', action: 'requested shift swap', location: 'with Sophie B.', time: '5 min ago' }
+            ].map((activity, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 0', borderBottom: i === 0 ? '1px solid #F1F5F9' : 'none' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '11px', fontWeight: 600 }}>{activity.avatar}</div>
+                <div>
+                  <p style={{ fontSize: '13px', color: '#1E293B', margin: 0 }}><strong>{activity.name}</strong> {activity.action} <span style={{ color: '#64748B' }}>{activity.location}</span></p>
+                  <p style={{ fontSize: '11px', color: '#94A3B8', margin: '2px 0 0' }}>{activity.time}</p>
                 </div>
-                <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                  <MoreHorizontal size={14} color="#64748B" />
-                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Team Health */}
+          <div style={{ background: 'white', borderRadius: '10px', padding: '16px', border: '1px solid #E2E8F0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Target size={16} color="#F59E0B" />
+                <span style={{ fontWeight: 600, color: '#1E293B', fontSize: '14px' }}>Team Health</span>
+              </div>
+              <span style={{ color: '#F97316', fontSize: '11px' }}>View More</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <TrendingUp size={20} color="#10B981" />
+              <div>
+                <p style={{ fontSize: '28px', fontWeight: 700, color: '#10B981', margin: 0 }}>94%</p>
+                <p style={{ fontSize: '12px', color: '#64748B', margin: 0 }}>Retention Rate</p>
               </div>
             </div>
-          ))}
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ fontSize: '18px', fontWeight: 700, color: '#1E293B', margin: 0 }}>1</p>
+                <p style={{ fontSize: '11px', color: '#64748B', margin: 0 }}>New Hires</p>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ fontSize: '18px', fontWeight: 700, color: '#1E293B', margin: 0 }}>1</p>
+                <p style={{ fontSize: '11px', color: '#64748B', margin: 0 }}>Onboarding</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -4396,13 +4780,18 @@ export default function HomePage() {
           <RisingULogo color={scrolled ? 'dark' : 'light'} />
           
           <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-            {['Platform', 'For Workers', 'For Managers', 'Pricing'].map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} style={{
+            {[
+              { label: 'For Head Office', href: '#for-head-office' },
+              { label: 'For Managers', href: '#for-managers' },
+              { label: 'For Workers', href: '#for-workers' },
+              { label: 'Pricing', href: '#pricing' }
+            ].map(item => (
+              <a key={item.label} href={item.href} style={{
                 color: scrolled ? '#475569' : 'rgba(255,255,255,0.8)',
                 textDecoration: 'none',
                 fontSize: '14px',
                 fontWeight: 500
-              }}>{item}</a>
+              }}>{item.label}</a>
             ))}
             <Link to="/about" style={{
               color: scrolled ? '#475569' : 'rgba(255,255,255,0.8)',
@@ -4426,177 +4815,169 @@ export default function HomePage() {
         <div style={{ position: 'absolute', top: '25%', left: '-128px', width: '500px', height: '500px', background: 'rgba(255,107,53,0.15)', borderRadius: '50%', filter: 'blur(100px)' }} />
         <div style={{ position: 'absolute', bottom: 0, right: 0, width: '600px', height: '600px', background: 'rgba(139,92,246,0.1)', borderRadius: '50%', filter: 'blur(100px)' }} />
         
-        <div className="hero-grid" style={{ position: 'relative', maxWidth: '1280px', margin: '0 auto', padding: '160px 24px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
-          {/* Left Content */}
-          <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '9999px', padding: '8px 16px', marginBottom: '32px' }}>
-              <span style={{ width: '8px', height: '8px', background: '#10B981', borderRadius: '50%' }} />
-              <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>For Retail • Hospitality • Healthcare • Manufacturing</span>
-            </div>
-            
-            <h1 className="hero-h1" style={{ fontSize: '56px', fontWeight: 700, color: 'white', lineHeight: 1.1, marginBottom: '24px' }}>
-              Reduce frontline<br/>turnover by <span className="gradient-text">up to 40%</span>
-            </h1>
-            
-            <p style={{ fontSize: '20px', color: '#CBD5E1', marginBottom: '16px', lineHeight: 1.6 }}>
-              Workforce intelligence for frontline teams. Show your people where they can go — and watch them stay.
-            </p>
-            
-            <p style={{ fontSize: '16px', color: '#94A3B8', marginBottom: '32px' }}>
-              Skills tracking. AI scheduling. Internal mobility. All in one app that workers actually love.
-            </p>
-            
-            <div className="cta-buttons" style={{ display: 'flex', gap: '16px', marginBottom: '40px' }}>
-              <Link to="/demo" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FF6B35', color: 'white', border: 'none', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}>
-                Try Demo <ArrowRight size={20} />
-              </Link>
-              <button onClick={() => window.open('https://calendly.com/dazevedo-uplifthq/30min', '_blank')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 600, cursor: 'pointer' }}>
-                <Calendar size={20} /> Book a Call
-              </button>
-            </div>
-            
-            <div className="trust-badges" style={{ display: 'flex', gap: '24px' }}>
-              {[
-                { icon: Shield, label: 'SOC 2 in progress' },
-                { icon: Lock, label: 'GDPR compliant' },
-                { icon: CheckCircle2, label: 'No credit card' }
-              ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#94A3B8', fontSize: '14px' }}>
-                  <item.icon size={16} color="#10B981" />
-                  {item.label}
-                </div>
-              ))}
-            </div>
-            
-            {/* Social Proof */}
-            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-              <p style={{ color: '#64748B', fontSize: '14px', margin: 0 }}>
-                <span style={{ color: '#FF6B35', fontWeight: 600 }}>Now in pilot</span> with UK retail and hospitality teams
-              </p>
-            </div>
+        {/* Hero Content - Centered */}
+        <div style={{ position: 'relative', maxWidth: '900px', margin: '0 auto', padding: '160px 24px 60px', textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '9999px', padding: '8px 16px', marginBottom: '32px' }}>
+            <span style={{ width: '8px', height: '8px', background: '#10B981', borderRadius: '50%' }} />
+            <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>Now Live — Try the Demo</span>
           </div>
-          
-          {/* Right - Product Preview */}
-          <div style={{ position: 'relative' }}>
-            <div className="float-animation">
-              <MobileHomeScreen />
-            </div>
-            
-            {/* Floating notification */}
-            <div className="float-delayed" style={{
-              position: 'absolute',
-              right: '40px',
-              top: '30%',
-              background: 'white',
-              borderRadius: '12px',
-              padding: '12px 16px',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
-            }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TrendingUp size={20} color="#16A34A" />
-              </div>
-              <div>
-                <p style={{ fontSize: '12px', color: '#64748B', margin: 0 }}>Sarah promoted to</p>
-                <p style={{ fontSize: '14px', fontWeight: 600, color: '#0F172A', margin: 0 }}>Shift Supervisor</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Inline Demo Preview */}
-        <div id="platform" style={{ 
-          maxWidth: '1100px', 
-          margin: '0 auto', 
-          padding: '32px 24px 80px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-          <p style={{ color: '#94A3B8', fontSize: '14px', marginBottom: '24px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 500 }}>
-            See it in action
+
+          <h1 className="hero-h1" style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700, color: 'white', lineHeight: 1.1, marginBottom: '24px' }}>
+            Cut frontline turnover by <span className="gradient-text">up to 40%</span>.
+          </h1>
+
+          <p style={{ fontSize: '20px', color: '#CBD5E1', marginBottom: '16px', lineHeight: 1.6, maxWidth: '700px', margin: '0 auto 16px' }}>
+            Uplift gives workers schedules, skills, and career paths — so they stay longer and you stop losing money on rehiring.
           </p>
-          
-          <div 
-            onClick={() => setShowDemo(true)}
-            style={{ 
-              position: 'relative',
-              cursor: 'pointer',
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: '0 40px 80px -20px rgba(0,0,0,0.5)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              width: '100%',
-              maxWidth: '1000px'
-            }}
-          >
-            {/* Embedded Demo Preview */}
-            <div className="demo-container" style={{ 
-              width: '100%',
-              height: '500px',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <EmbeddedDemoPreview />
-            </div>
-            
-            {/* Hover Overlay */}
-            <div 
-              className="demo-hover-overlay"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(0,0,0,0)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.3s ease'
-              }}
-            >
-              <div 
-                className="demo-hover-button"
-                style={{
-                  background: 'rgba(255,107,53,0.95)',
-                  borderRadius: '16px',
-                  padding: '16px 32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  color: 'white',
-                  fontWeight: 600,
-                  fontSize: '18px',
-                  opacity: 0,
-                  transform: 'scale(0.9)',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                <Play size={24} /> Watch Full Tour
-              </div>
-            </div>
-          </div>
-          
-          <p style={{ color: '#64748B', fontSize: '14px', marginTop: '20px' }}>
-            Click to watch the full tour
+
+          <p style={{ fontSize: '14px', color: '#94A3B8', marginBottom: '32px' }}>
+            Built for retail, hospitality, healthcare, and manufacturing teams.
           </p>
-        </div>
-        
-        {/* Stats Bar */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)' }}>
-          <div className="stats-grid" style={{ maxWidth: '1280px', margin: '0 auto', padding: '32px 24px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '32px' }}>
+
+          <div className="cta-buttons" style={{ display: 'flex', gap: '16px', marginBottom: '40px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link to="/demo" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FF6B35', color: 'white', border: 'none', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}>
+              Try the Demo <ArrowRight size={20} />
+            </Link>
+            <a href="#product-tour" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '16px 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
+              <Play size={20} /> Watch Product Tour
+            </a>
+          </div>
+
+          <div className="trust-badges" style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}>
             {[
-              { value: 'Up to 40%', label: 'Lower turnover', desc: 'Target reduction' },
-              { value: 'Up to 70%', label: 'Faster hiring', desc: 'Internal vs external' },
-              { value: '4-6 weeks', label: 'To go live', desc: 'Typical implementation' },
-              { value: '<3 sec', label: 'Schedule generated', desc: 'With AI scheduler' }
-            ].map((stat, i) => (
-              <div key={i}>
-                <div style={{ fontSize: '36px', fontWeight: 700, color: 'white' }}>{stat.value}</div>
-                <div style={{ color: '#FF6B35', fontWeight: 600, fontSize: '14px' }}>{stat.label}</div>
-                <div style={{ color: '#64748B', fontSize: '12px' }}>{stat.desc}</div>
+              { icon: Shield, label: 'SOC 2 in progress' },
+              { icon: Lock, label: 'GDPR compliant' },
+              { icon: CheckCircle2, label: 'No credit card' }
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#94A3B8', fontSize: '14px' }}>
+                <item.icon size={16} color="#10B981" />
+                {item.label}
               </div>
             ))}
+          </div>
+
+          {/* Social Proof */}
+          <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+            <p style={{ color: '#64748B', fontSize: '14px', margin: 0 }}>
+              <span style={{ color: '#FF6B35', fontWeight: 600 }}>Now in pilot</span> with UK retail and hospitality teams
+            </p>
+          </div>
+        </div>
+
+        {/* Product Tour Carousel */}
+        <div id="product-tour">
+          <ProductTourCarousel />
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* THE COST OF DOING NOTHING SECTION */}
+      {/* ================================================================== */}
+      <section style={{ padding: '100px 0', background: '#0F172A' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '44px', fontWeight: 700, color: 'white', lineHeight: 1.2, marginBottom: '48px' }}>
+            The cost of doing nothing.
+          </h2>
+
+          {/* Stats */}
+          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px', marginBottom: '48px' }}>
+            {[
+              { value: '£12,000', label: 'Average cost to replace one frontline worker' },
+              { value: '73%', label: 'Frontline workers quit in their first year' },
+              { value: '£3.1M', label: 'What a 500-person company loses annually to churn' }
+            ].map((stat, i) => (
+              <div key={i} style={{
+                background: 'rgba(255,255,255,0.05)',
+                borderRadius: '16px',
+                padding: '40px 24px',
+                border: '1px solid rgba(255,255,255,0.1)'
+              }}>
+                <div style={{ fontSize: '52px', fontWeight: 700, color: 'white' }}>{stat.value}</div>
+                <div style={{ color: '#94A3B8', fontSize: '15px', marginTop: '16px', lineHeight: 1.5 }}>{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ fontSize: '20px', color: '#CBD5E1', lineHeight: 1.7, maxWidth: '700px', margin: '0 auto' }}>
+            It's not a people problem. It's a visibility problem.<br/>
+            <span style={{ color: '#FF6B35', fontWeight: 600 }}>Workers leave because they can't see a future. Uplift fixes that.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* PLATFORM OVERVIEW - THREE PRODUCTS */}
+      {/* ================================================================== */}
+      <section id="platform" style={{ padding: '120px 0', background: '#F8FAFC' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ fontSize: '44px', fontWeight: 700, color: '#0F172A', marginBottom: '16px' }}>
+              One platform. Three experiences.
+            </h2>
+            <p style={{ fontSize: '18px', color: '#64748B', maxWidth: '600px', margin: '0 auto' }}>
+              Everyone gets the right tool for how they work.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+            {/* Head Office Portal */}
+            <div style={{ background: 'white', borderRadius: '20px', padding: '32px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                <Monitor size={28} color="#8B5CF6" />
+              </div>
+              <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Head Office Portal</h3>
+              <p style={{ fontSize: '14px', color: '#8B5CF6', fontWeight: 600, marginBottom: '16px' }}>For HR & Ops at HQ</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {['AI scheduling', 'Demand forecasting', 'Workforce analytics', 'Flight risk alerts', 'HRIS integrations', 'Reports & exports'].map((item, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#475569', fontSize: '14px', marginBottom: '10px' }}>
+                    <Check size={16} color="#8B5CF6" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Manager App */}
+            <div style={{ background: 'white', borderRadius: '20px', padding: '32px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: '#DBEAFE', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                <Smartphone size={28} color="#3B82F6" />
+              </div>
+              <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Manager App</h3>
+              <p style={{ fontSize: '14px', color: '#3B82F6', fontWeight: 600, marginBottom: '16px' }}>For store & shift managers on the floor</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {['Approve requests', 'View team rotas', 'Manage shifts', 'Team insights', 'On-the-go access', 'Real-time alerts'].map((item, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#475569', fontSize: '14px', marginBottom: '10px' }}>
+                    <Check size={16} color="#3B82F6" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Worker App */}
+            <div style={{ background: 'white', borderRadius: '20px', padding: '32px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                <Smartphone size={28} color="#FF6B35" />
+              </div>
+              <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Worker App</h3>
+              <p style={{ fontSize: '14px', color: '#FF6B35', fontWeight: 600, marginBottom: '16px' }}>For frontline workers</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {['My schedule', 'My skills', 'Career paths', 'Shift marketplace', 'Rewards & points', 'Time-off requests'].map((item, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#475569', fontSize: '14px', marginBottom: '10px' }}>
+                    <Check size={16} color="#FF6B35" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* No company email needed */}
+          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <p style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '16px', color: '#64748B', background: '#FFF7ED', padding: '12px 24px', borderRadius: '9999px', border: '1px solid #FFEDD5' }}>
+              <CheckCircle2 size={18} color="#FF6B35" />
+              Workers sign up with any email or phone number. No company email needed.
+            </p>
           </div>
         </div>
       </section>
@@ -4633,20 +5014,23 @@ export default function HomePage() {
                 and watch your career path unfold.
               </p>
               
-              <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              {/* Feature list with descriptions */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {[
-                  { icon: DollarSign, label: 'Earnings dashboard' },
-                  { icon: Calendar, label: 'Shift marketplace' },
-                  { icon: Award, label: 'Skills tracking' },
-                  { icon: Target, label: 'Career paths' },
-                  { icon: Briefcase, label: 'Internal jobs' },
-                  { icon: Bell, label: 'Smart notifications' }
+                  { icon: Calendar, title: 'See your schedule', desc: 'Your shifts, availability, time-off requests — all in one place.' },
+                  { icon: Award, title: 'Track your skills', desc: 'Every training, certification, skill — documented and visible.' },
+                  { icon: Target, title: 'See your career path', desc: 'Know what\'s possible. See what skills you need to get there.' },
+                  { icon: Briefcase, title: 'Shift marketplace', desc: 'Pick up extra shifts. First come, first served.' },
+                  { icon: Star, title: 'Earn rewards', desc: 'Points for picking up shifts. Recognition that means something.' }
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <item.icon size={18} color="#FF6B35" />
+                  <div key={i} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <item.icon size={22} color="#FF6B35" />
                     </div>
-                    <span style={{ color: '#334155', fontSize: '15px' }}>{item.label}</span>
+                    <div>
+                      <p style={{ color: '#0F172A', fontWeight: 600, fontSize: '16px', margin: '0 0 4px' }}>{item.title}</p>
+                      <p style={{ color: '#64748B', fontSize: '14px', margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -4654,126 +5038,113 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      
+
       {/* ================================================================== */}
-      {/* GAMIFICATION SECTION */}
+      {/* FOR HEAD OFFICE SECTION (Portal) */}
       {/* ================================================================== */}
-      <section style={{ padding: '120px 0', background: 'white' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-          <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
-            {/* Left - Content */}
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#FEF3C7', color: '#D97706', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 500 }}>
-                <Award size={16} /> Gamification & Rewards
-              </div>
-              
-              <h2 style={{ fontSize: '40px', fontWeight: 700, color: '#0F172A', lineHeight: 1.2, marginBottom: '24px' }}>
-                Points. Badges. Streaks.<br/>
-                <span className="gradient-text">Real rewards.</span>
-              </h2>
-              
-              <p style={{ fontSize: '18px', color: '#475569', marginBottom: '32px', lineHeight: 1.6 }}>
-                Engagement mechanics that actually work. Earn points for completing tasks, maintain streaks, 
-                unlock badges, and redeem real rewards — from gift cards to extra PTO.
-              </p>
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '32px' }}>
-                {[
-                  { icon: Zap, label: 'Point system' },
-                  { icon: Award, label: 'Badge collection' },
-                  { icon: TrendingUp, label: 'Leaderboards' },
-                  { icon: Star, label: 'Streak tracking' },
-                  { icon: Users, label: 'Peer recognition' },
-                  { icon: DollarSign, label: 'Reward catalog' }
-                ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <item.icon size={18} color="#D97706" />
-                    </div>
-                    <span style={{ color: '#334155', fontSize: '15px' }}>{item.label}</span>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Stats callout */}
-              <div style={{ background: '#FFFBEB', borderRadius: '12px', padding: '20px', border: '1px solid #FEF3C7' }}>
-                <p style={{ fontWeight: 600, color: '#92400E', marginBottom: '12px' }}>Research-backed engagement:</p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-                  <div>
-                    <p style={{ fontSize: '24px', fontWeight: 700, color: '#D97706', margin: 0 }}>3x</p>
-                    <p style={{ fontSize: '12px', color: '#78350F', margin: 0 }}>Higher adoption</p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: '24px', fontWeight: 700, color: '#D97706', margin: 0 }}>80%</p>
-                    <p style={{ fontSize: '12px', color: '#78350F', margin: 0 }}>Motivated by recognition</p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: '24px', fontWeight: 700, color: '#D97706', margin: 0 }}>47%</p>
-                    <p style={{ fontSize: '12px', color: '#78350F', margin: 0 }}>Task completion ↑</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Right - Mockups */}
-            <div className="phone-mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
-              <div className="float-animation">
-                <MobileRewardsScreen />
-              </div>
-              <div className="float-delayed" style={{ marginTop: '60px' }}>
-                <MobileFeedScreen />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* ================================================================== */}
-      {/* FOR MANAGERS SECTION */}
-      {/* ================================================================== */}
-      <section id="for-managers" style={{ padding: '120px 0', background: '#F8FAFC' }}>
+      <section id="for-head-office" style={{ padding: '120px 0', background: 'white' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
           <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             {/* Left - Content */}
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#F3E8FF', color: '#7C3AED', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 500 }}>
-                <Monitor size={16} /> Admin Portal for Managers
+                <Monitor size={16} /> Head Office Portal
               </div>
-              
+
               <h2 style={{ fontSize: '40px', fontWeight: 700, color: '#0F172A', lineHeight: 1.2, marginBottom: '24px' }}>
-                Show your people<br/>
-                <span className="gradient-text">where they can go.</span>
+                Command center for<br/>
+                <span className="gradient-text">workforce intelligence.</span>
               </h2>
-              
+
               <p style={{ fontSize: '18px', color: '#475569', marginBottom: '32px', lineHeight: 1.6 }}>
-                A command center for workforce intelligence. Real-time analytics, AI scheduling, 
-                skills matrix, and career pathway visualization.
+                For HR, Operations, and workforce planners at head office.
+                AI-powered scheduling, demand forecasting, and analytics — all in one place.
               </p>
-              
-              <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+
+              {/* Feature list with descriptions */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {[
-                  { icon: BarChart3, label: 'Workforce dashboard' },
-                  { icon: Brain, label: 'AI scheduler' },
-                  { icon: Award, label: 'Skills matrix' },
-                  { icon: Target, label: 'Career pathways' },
-                  { icon: Link2, label: '12 integrations' },
-                  { icon: Shield, label: 'Enterprise security' }
+                  { icon: Brain, title: 'AI Scheduling', desc: 'Tell us your demand, rules, preferences. AI builds the rota in seconds.' },
+                  { icon: TrendingUp, title: 'Demand Forecasting', desc: 'AI predicts staffing needs based on historical data.' },
+                  { icon: BarChart3, title: 'Workforce Analytics', desc: 'See attendance, skills coverage, training compliance, team performance.' },
+                  { icon: AlertCircle, title: 'Flight Risk Alerts', desc: 'Know who\'s about to leave before they hand in notice.' },
+                  { icon: Link2, title: 'Integrations', desc: 'Connect to ADP, Workday, BambooHR, SAP, Slack, Teams.' }
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <item.icon size={18} color="#8B5CF6" />
+                  <div key={i} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <item.icon size={22} color="#8B5CF6" />
                     </div>
-                    <span style={{ color: '#334155', fontSize: '15px' }}>{item.label}</span>
+                    <div>
+                      <p style={{ color: '#0F172A', fontWeight: 600, fontSize: '16px', margin: '0 0 4px' }}>{item.title}</p>
+                      <p style={{ color: '#64748B', fontSize: '14px', margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-            
+
             {/* Right - Portal Mockups */}
             <div className="portal-mockup-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <PortalDashboard />
               <div className="mobile-hide-second">
                 <PortalSkillsMatrix />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* FOR MANAGERS SECTION (Mobile App) */}
+      {/* ================================================================== */}
+      <section id="for-managers" style={{ padding: '120px 0', background: '#F8FAFC' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          <div className="two-col-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+            {/* Left - Mockups */}
+            <div className="phone-mockup-container" style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
+              <div className="float-animation">
+                <MobileManagerScreen />
+              </div>
+              <div className="float-delayed" style={{ marginTop: '60px' }}>
+                <MobileManagerApprovalsScreen />
+              </div>
+            </div>
+
+            {/* Right - Content */}
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#DBEAFE', color: '#1D4ED8', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 500 }}>
+                <Smartphone size={16} /> Manager App
+              </div>
+
+              <h2 style={{ fontSize: '40px', fontWeight: 700, color: '#0F172A', lineHeight: 1.2, marginBottom: '24px' }}>
+                Manage your team<br/>
+                <span className="gradient-text">from the floor.</span>
+              </h2>
+
+              <p style={{ fontSize: '18px', color: '#475569', marginBottom: '32px', lineHeight: 1.6 }}>
+                For store managers, shift supervisors, and team leads.
+                No need to go back to the office — manage everything from your phone.
+              </p>
+
+              {/* Feature list with descriptions */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {[
+                  { icon: CheckCircle2, title: 'Approve on the go', desc: 'Time-off requests, shift swaps, overtime — approve from your phone.' },
+                  { icon: Calendar, title: 'See your team\'s rota', desc: 'Who\'s in today, who\'s off, who\'s late.' },
+                  { icon: Users, title: 'Manage shifts', desc: 'Fill gaps, reassign shifts, handle no-shows.' },
+                  { icon: Eye, title: 'Team insights', desc: 'See skills, certifications, performance at a glance.' },
+                  { icon: Smartphone, title: 'Stay connected', desc: 'No need to go back to the office. Manage from the floor.' }
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#DBEAFE', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <item.icon size={22} color="#3B82F6" />
+                    </div>
+                    <div>
+                      <p style={{ color: '#0F172A', fontWeight: 600, fontSize: '16px', margin: '0 0 4px' }}>{item.title}</p>
+                      <p style={{ color: '#64748B', fontSize: '14px', margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -4801,7 +5172,7 @@ export default function HomePage() {
           </div>
           
           <div className="portal-mockup-container" style={{ display: 'flex', justifyContent: 'center', marginBottom: '48px' }}>
-            <PortalSchedule />
+            <PortalScheduleScreenshot />
           </div>
           
           {/* Rules Grid */}
@@ -4895,16 +5266,62 @@ export default function HomePage() {
             </div>
             
             <div className="portal-mockup-container">
-              <PortalIntegrations />
+              <PortalIntegrationsScreenshot />
             </div>
           </div>
         </div>
       </section>
       
       {/* ================================================================== */}
+      {/* INDUSTRIES SECTION */}
+      {/* ================================================================== */}
+      <section style={{ padding: '100px 0', background: '#F8FAFC' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ fontSize: '44px', fontWeight: 700, color: '#0F172A', marginBottom: '16px' }}>
+              Built for frontline teams
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+            {[
+              { Icon: Building2, name: 'Retail', desc: 'Reduce churn in your stores', color: '#FF6B35' },
+              { Icon: Briefcase, name: 'Hospitality', desc: 'Keep your best baristas & servers', color: '#8B5CF6' },
+              { Icon: Shield, name: 'Healthcare', desc: 'Retain care workers who actually care', color: '#10B981' },
+              { Icon: Settings, name: 'Manufacturing', desc: 'Stop losing trained operators', color: '#3B82F6' }
+            ].map((industry, i) => (
+              <div key={i} style={{
+                background: 'white',
+                borderRadius: '20px',
+                padding: '32px 24px',
+                textAlign: 'center',
+                border: '1px solid #E2E8F0',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+              }}>
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '16px',
+                  background: `${industry.color}15`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px'
+                }}>
+                  <industry.Icon size={32} color={industry.color} />
+                </div>
+                <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>{industry.name}</h3>
+                <p style={{ fontSize: '15px', color: '#64748B', margin: 0, lineHeight: 1.5 }}>{industry.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
       {/* ROI SECTION */}
       {/* ================================================================== */}
-      <section style={{ padding: '80px 0', background: '#F8FAFC' }}>
+      <section style={{ padding: '80px 0', background: 'white' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
           <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', borderRadius: '24px', padding: '48px' }}>
             <div style={{ textAlign: 'center', marginBottom: '40px' }}>
@@ -4915,42 +5332,58 @@ export default function HomePage() {
                 See how much you could save with Uplift
               </p>
             </div>
-            
+
             <ROICalculator />
           </div>
         </div>
       </section>
-      
+
       {/* ================================================================== */}
-      {/* FOUNDERS OFFER SECTION */}
+      {/* FOUNDING PARTNER CTA SECTION */}
       {/* ================================================================== */}
-      <section style={{ padding: '80px 0', background: 'linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%)' }}>
+      <section style={{ padding: '100px 0', background: 'linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%)' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.2)', color: 'white', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 600 }}>
-            <Clock size={16} /> Limited Time — Founding Partners Only
-          </div>
-          <h2 style={{ fontSize: '40px', fontWeight: 700, color: 'white', marginBottom: '16px' }}>
-            Lock in 33% off. Forever.
+          <h2 style={{ fontSize: '44px', fontWeight: 700, color: 'white', marginBottom: '20px' }}>
+            Be one of our first 10 founding partners.
           </h2>
-          <p style={{ fontSize: '20px', color: 'rgba(255,255,255,0.9)', marginBottom: '16px', maxWidth: '600px', margin: '0 auto 24px' }}>
-            We're looking for 10 founding partners to shape the future of Uplift. In return, you get our lowest prices — guaranteed for life.
+          <p style={{ fontSize: '20px', color: 'rgba(255,255,255,0.9)', marginBottom: '40px', maxWidth: '650px', margin: '0 auto 40px' }}>
+            We're onboarding our first customers now. In return for shaping the product with us, you lock in 33% off forever.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', flexWrap: 'wrap', marginBottom: '32px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <CheckCircle2 size={20} />
-              <span>33% discount locked forever</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <CheckCircle2 size={20} />
-              <span>Direct access to founder</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <CheckCircle2 size={20} />
-              <span>Shape the product roadmap</span>
-            </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', maxWidth: '500px', margin: '0 auto 40px' }}>
+            {[
+              '£10/user instead of £15 (Growth)',
+              '£8/user instead of £12 (Scale)',
+              'Direct Slack channel with the founder',
+              'Your feature requests prioritised'
+            ].map((benefit, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'white', textAlign: 'left' }}>
+                <CheckCircle2 size={20} style={{ flexShrink: 0 }} />
+                <span style={{ fontSize: '15px' }}>{benefit}</span>
+              </div>
+            ))}
           </div>
-          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)' }}>
-            Only 7 spots remaining
+
+          <Link to="/demo" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'white',
+            color: '#FF6B35',
+            border: 'none',
+            padding: '18px 36px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            textDecoration: 'none',
+            marginBottom: '24px'
+          }}>
+            Become a Founding Partner <ArrowRight size={20} />
+          </Link>
+
+          <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', fontWeight: 600 }}>
+            Only 7 of 10 spots remaining
           </p>
         </div>
       </section>
@@ -4978,66 +5411,62 @@ export default function HomePage() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <CheckCircle2 size={20} color="#10B981" />
-                <span style={{ color: '#10B981', fontWeight: 700, fontSize: '16px' }}>30-Day Pilot</span>
+                <span style={{ color: '#10B981', fontWeight: 700, fontSize: '16px' }}>14-Day Proof of Value</span>
               </div>
               <p style={{ color: '#94A3B8', fontSize: '14px', margin: 0 }}>
-                Full platform • 1 location • Up to 50 users
+                Full platform • All features • No credit card required
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <p style={{ color: 'white', fontWeight: 600, fontSize: '14px', margin: 0 }}>Pilot setup from £2,500</p>
-              <p style={{ color: '#64748B', fontSize: '12px', margin: '4px 0 0' }}>Credited to annual contract</p>
+              <p style={{ color: 'white', fontWeight: 600, fontSize: '14px', margin: 0 }}>All tiers include Portal + Manager App + Worker App</p>
             </div>
           </div>
           
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,107,53,0.2)', color: '#FF6B35', borderRadius: '9999px', padding: '8px 16px', marginBottom: '24px', fontSize: '14px', fontWeight: 600 }}>
-              <Zap size={16} /> Founding Partner Pricing — Lock In 33% Off Forever
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,107,53,0.2)', color: '#FF6B35', borderRadius: '9999px', padding: '8px 16px', marginBottom: '16px', fontSize: '14px', fontWeight: 600 }}>
+              <Zap size={16} /> Founding Partner Pricing — First 10 Only
             </div>
             <h2 style={{ fontSize: '40px', fontWeight: 700, color: 'white', marginBottom: '16px' }}>
               Full platform. Pick your team size.
             </h2>
-            <p style={{ fontSize: '18px', color: '#94A3B8' }}>
+            <p style={{ fontSize: '18px', color: '#94A3B8', marginBottom: '8px' }}>
               Every plan includes all features. No add-ons. No surprises.
+            </p>
+            <p style={{ fontSize: '14px', color: '#F59E0B', fontWeight: 600 }}>
+              Only 7 of 10 spots remaining
             </p>
           </div>
           
           {/* Pricing Cards */}
           <div className="pricing-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
             {[
-              { 
-                name: 'Growth', 
-                headcount: '50-250 users',
+              {
+                name: 'Growth',
+                headcount: 'Up to 250 workers',
                 originalPrice: '£15',
-                price: '£10', 
+                price: '£10',
                 period: '/user/month',
-                flexPrice: '£12/user',
                 savings: 'Save 33%',
-                pilotFee: '£2,500',
-                primary: false 
+                primary: false
               },
-              { 
-                name: 'Scale', 
-                headcount: '251-750 users',
+              {
+                name: 'Scale',
+                headcount: '250-750 workers',
                 originalPrice: '£12',
-                price: '£8', 
+                price: '£8',
                 period: '/user/month',
-                flexPrice: '£10/user',
                 savings: 'Save 33%',
-                pilotFee: '£5,000',
-                primary: true 
+                primary: true
               },
-              { 
-                name: 'Enterprise', 
-                headcount: '750+ users',
+              {
+                name: 'Enterprise',
+                headcount: '750+ workers',
                 originalPrice: null,
-                price: 'POA', 
+                price: 'Custom',
                 period: '',
-                flexPrice: 'Custom',
                 savings: 'Custom pricing',
-                pilotFee: 'From £10,000',
-                primary: false 
+                primary: false
               }
             ].map((tier, i) => (
               <div key={i} style={{
@@ -5191,10 +5620,10 @@ export default function HomePage() {
             <div>
               <h4 style={{ color: 'white', fontWeight: 600, marginBottom: '16px', fontSize: '14px' }}>Platform</h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li style={{ marginBottom: '10px' }}><a href="#for-workers" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>For Workers</a></li>
+                <li style={{ marginBottom: '10px' }}><a href="#for-head-office" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>For Head Office</a></li>
                 <li style={{ marginBottom: '10px' }}><a href="#for-managers" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>For Managers</a></li>
-                <li style={{ marginBottom: '10px' }}><a href="#platform" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>AI Scheduler</a></li>
-                <li style={{ marginBottom: '10px' }}><a href="#platform" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>Integrations</a></li>
+                <li style={{ marginBottom: '10px' }}><a href="#for-workers" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>For Workers</a></li>
+                <li style={{ marginBottom: '10px' }}><a href="#platform" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>Features</a></li>
               </ul>
             </div>
             <div>

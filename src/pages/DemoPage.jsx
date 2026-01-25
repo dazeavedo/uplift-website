@@ -14,9 +14,9 @@ const HUBSPOT_CONFIG = {
 
 // Demo URLs - update when ready
 const DEMO_CONFIG = {
-  portalUrl: 'https://portal.uplifthq.co.uk',
-  appStoreUrl: '#', // TODO: Update with App Store URL
-  playStoreUrl: '#', // TODO: Update with Play Store URL
+  portalUrl: 'https://upliftportaldemo.netlify.app/',
+  appStoreUrl: '#', // Coming soon
+  playStoreUrl: '#', // Coming soon
   calendlyUrl: 'https://calendly.com/dazevedo-uplifthq/30min'
 };
 
@@ -124,7 +124,7 @@ export default function DemoPage() {
               color: 'rgba(255,255,255,0.7)',
               marginBottom: '48px'
             }}>
-              No sales call. No slides. Just the product.
+              Try the demo. We'll be in touch.
             </p>
 
             <form onSubmit={handleSubmit}>
@@ -224,49 +224,49 @@ export default function DemoPage() {
               </p>
             </div>
 
-            {/* Product Cards */}
+            {/* Product Cards - 3 cards: Head Office Portal, Manager App, Worker App */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '24px',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '20px',
               marginBottom: '32px'
             }}>
-              {/* Manager Portal Card */}
+              {/* Head Office Portal Card */}
               <div style={{
                 background: '#1E293B',
                 borderRadius: '20px',
-                padding: '32px',
+                padding: '28px',
                 border: '1px solid #334155'
               }}>
                 <div style={{
-                  width: '56px',
-                  height: '56px',
-                  background: 'rgba(255, 107, 53, 0.15)',
+                  width: '52px',
+                  height: '52px',
+                  background: 'rgba(139, 92, 246, 0.15)',
                   borderRadius: '14px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginBottom: '20px'
+                  marginBottom: '16px'
                 }}>
-                  <Monitor size={28} color="#FF6B35" />
+                  <Monitor size={26} color="#8B5CF6" />
                 </div>
 
                 <h3 style={{
-                  fontSize: '22px',
+                  fontSize: '20px',
                   fontWeight: 600,
                   color: 'white',
                   marginBottom: '8px'
                 }}>
-                  Manager Portal
+                  Head Office Portal
                 </h3>
 
                 <p style={{
-                  fontSize: '15px',
+                  fontSize: '14px',
                   color: 'rgba(255,255,255,0.6)',
-                  marginBottom: '24px',
-                  lineHeight: 1.6
+                  marginBottom: '20px',
+                  lineHeight: 1.5
                 }}>
-                  Scheduling, analytics, and team insights
+                  AI scheduling, demand forecasting, analytics
                 </p>
 
                 <a
@@ -277,43 +277,119 @@ export default function DemoPage() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
-                    padding: '14px 24px',
-                    background: '#FF6B35',
+                    padding: '12px 20px',
+                    background: '#8B5CF6',
                     color: 'white',
                     border: 'none',
                     borderRadius: '10px',
-                    fontSize: '15px',
+                    fontSize: '14px',
                     fontWeight: 600,
                     textDecoration: 'none',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    marginBottom: '16px'
                   }}
                 >
-                  Launch Portal <ArrowRight size={18} />
+                  Launch Portal <ArrowRight size={16} />
                 </a>
+
+                <div style={{
+                  background: 'rgba(139, 92, 246, 0.1)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '13px'
+                }}>
+                  <p style={{ color: '#A78BFA', margin: '0 0 4px', fontWeight: 500 }}>Demo credentials:</p>
+                  <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>{DEMO_CREDENTIALS.admin.email}</p>
+                  <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{DEMO_CREDENTIALS.admin.password}</p>
+                </div>
+              </div>
+
+              {/* Manager App Card */}
+              <div style={{
+                background: '#1E293B',
+                borderRadius: '20px',
+                padding: '28px',
+                border: '1px solid #334155'
+              }}>
+                <div style={{
+                  width: '52px',
+                  height: '52px',
+                  background: 'rgba(59, 130, 246, 0.15)',
+                  borderRadius: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '16px'
+                }}>
+                  <Smartphone size={26} color="#3B82F6" />
+                </div>
+
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  color: 'white',
+                  marginBottom: '8px'
+                }}>
+                  Manager App
+                </h3>
+
+                <p style={{
+                  fontSize: '14px',
+                  color: 'rgba(255,255,255,0.6)',
+                  marginBottom: '20px',
+                  lineHeight: 1.5
+                }}>
+                  Approvals, team view, floor management
+                </p>
+
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                  <span style={{
+                    padding: '12px 16px',
+                    background: '#334155',
+                    color: 'rgba(255,255,255,0.5)',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontSize: '13px',
+                    fontWeight: 500
+                  }}>
+                    Coming Soon
+                  </span>
+                </div>
+
+                <div style={{
+                  background: 'rgba(59, 130, 246, 0.1)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '13px'
+                }}>
+                  <p style={{ color: '#60A5FA', margin: '0 0 4px', fontWeight: 500 }}>Demo credentials:</p>
+                  <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>{DEMO_CREDENTIALS.manager.email}</p>
+                  <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{DEMO_CREDENTIALS.manager.password}</p>
+                </div>
               </div>
 
               {/* Worker App Card */}
               <div style={{
                 background: '#1E293B',
                 borderRadius: '20px',
-                padding: '32px',
+                padding: '28px',
                 border: '1px solid #334155'
               }}>
                 <div style={{
-                  width: '56px',
-                  height: '56px',
+                  width: '52px',
+                  height: '52px',
                   background: 'rgba(255, 107, 53, 0.15)',
                   borderRadius: '14px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginBottom: '20px'
+                  marginBottom: '16px'
                 }}>
-                  <Smartphone size={28} color="#FF6B35" />
+                  <Smartphone size={26} color="#FF6B35" />
                 </div>
 
                 <h3 style={{
-                  fontSize: '22px',
+                  fontSize: '20px',
                   fontWeight: 600,
                   color: 'white',
                   marginBottom: '8px'
@@ -322,120 +398,37 @@ export default function DemoPage() {
                 </h3>
 
                 <p style={{
-                  fontSize: '15px',
+                  fontSize: '14px',
                   color: 'rgba(255,255,255,0.6)',
-                  marginBottom: '24px',
-                  lineHeight: 1.6
+                  marginBottom: '20px',
+                  lineHeight: 1.5
                 }}>
-                  See what your workers see — shifts, skills, career paths
+                  Schedules, skills, career paths
                 </p>
 
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  <a
-                    href={DEMO_CONFIG.appStoreUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      padding: '14px 20px',
-                      background: '#334155',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '10px',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      textDecoration: 'none',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    App Store
-                  </a>
-                  <a
-                    href={DEMO_CONFIG.playStoreUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      padding: '14px 20px',
-                      background: '#334155',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '10px',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      textDecoration: 'none',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Google Play
-                  </a>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                  <span style={{
+                    padding: '12px 16px',
+                    background: '#334155',
+                    color: 'rgba(255,255,255,0.5)',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontSize: '13px',
+                    fontWeight: 500
+                  }}>
+                    Coming Soon
+                  </span>
                 </div>
-              </div>
-            </div>
 
-            {/* Credentials Box */}
-            <div style={{
-              background: '#F8FAFC',
-              borderRadius: '16px',
-              padding: '28px 32px',
-              marginBottom: '48px'
-            }}>
-              <h4 style={{
-                fontSize: '16px',
-                fontWeight: 600,
-                color: '#0F172A',
-                marginBottom: '20px'
-              }}>
-                Demo Login Credentials
-              </h4>
-
-              <div style={{ display: 'grid', gap: '16px' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
-                  <span style={{ color: '#64748B', fontSize: '14px', minWidth: '120px' }}>Worker App:</span>
-                  <code style={{
-                    background: '#E2E8F0',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    color: '#0F172A'
-                  }}>
-                    {DEMO_CREDENTIALS.worker.email}
-                  </code>
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
-                  <span style={{ color: '#64748B', fontSize: '14px', minWidth: '120px' }}>Manager App:</span>
-                  <code style={{
-                    background: '#E2E8F0',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    color: '#0F172A'
-                  }}>
-                    {DEMO_CREDENTIALS.manager.email}
-                  </code>
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
-                  <span style={{ color: '#64748B', fontSize: '14px', minWidth: '120px' }}>Portal:</span>
-                  <code style={{
-                    background: '#E2E8F0',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    color: '#0F172A'
-                  }}>
-                    {DEMO_CREDENTIALS.admin.email}
-                  </code>
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
-                  <span style={{ color: '#64748B', fontSize: '14px', minWidth: '120px' }}>Password (all):</span>
-                  <code style={{
-                    background: '#E2E8F0',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    color: '#0F172A',
-                    fontWeight: 600
-                  }}>
-                    {DEMO_CREDENTIALS.worker.password}
-                  </code>
+                <div style={{
+                  background: 'rgba(255, 107, 53, 0.1)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '13px'
+                }}>
+                  <p style={{ color: '#FF6B35', margin: '0 0 4px', fontWeight: 500 }}>Demo credentials:</p>
+                  <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>{DEMO_CREDENTIALS.worker.email}</p>
+                  <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{DEMO_CREDENTIALS.worker.password}</p>
                 </div>
               </div>
             </div>
