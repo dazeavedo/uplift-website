@@ -5637,9 +5637,13 @@ export default function HomePage() {
             </div>
           </div>
           
-          <div style={{ borderTop: '1px solid #1E293B', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ borderTop: '1px solid #1E293B', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
             <p style={{ color: '#64748B', fontSize: '13px' }}>© 2026 Uplift. All rights reserved.</p>
-            <p style={{ color: '#64748B', fontSize: '13px' }}>Made with ♥ for frontline workers everywhere</p>
+            <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+              <Link to="/privacy" style={{ color: '#64748B', textDecoration: 'none', fontSize: '13px' }}>Privacy Policy</Link>
+              <span style={{ color: '#334155' }}>|</span>
+              <Link to="/terms" style={{ color: '#64748B', textDecoration: 'none', fontSize: '13px' }}>Terms of Service</Link>
+            </div>
           </div>
         </div>
       </footer>

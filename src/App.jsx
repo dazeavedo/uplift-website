@@ -4,6 +4,8 @@ import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import DemoPage from './pages/DemoPage';
 import MockupCapture from './pages/MockupCapture';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/demo" element={<DemoPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
         <Route path="/capture" element={<MockupCapture />} />
         <Route path="/capture/:mockupId" element={<MockupCapture />} />
       </Routes>

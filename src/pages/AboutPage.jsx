@@ -240,6 +240,11 @@ export default function AboutPage() {
         padding: '32px 24px',
         textAlign: 'center'
       }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '16px' }}>
+          <Link to="/privacy" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>Privacy Policy</Link>
+          <span style={{ color: '#CBD5E1' }}>|</span>
+          <Link to="/terms" style={{ color: '#64748B', textDecoration: 'none', fontSize: '14px' }}>Terms of Service</Link>
+        </div>
         <p style={{ color: '#94A3B8', fontSize: '14px' }}>
           &copy; 2026 Uplift. All rights reserved.
         </p>
