@@ -4086,6 +4086,16 @@ const VideoDemo = ({ isOpen, onClose }) => {
             font-size: 20px !important;
           }
         }
+        @media (max-width: 768px) {
+          .stats-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          .industries-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 16px !important;
+          }
+        }
       `}</style>
       
       {/* Top Bar */}
@@ -5283,7 +5293,7 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+          <div className="industries-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
             {[
               { Icon: Building2, name: 'Retail', desc: 'Reduce churn in your stores', color: '#FF6B35' },
               { Icon: Briefcase, name: 'Hospitality', desc: 'Keep your best baristas & servers', color: '#8B5CF6' },
