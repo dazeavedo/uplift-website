@@ -1,5 +1,7 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/demo/worker/", "destination": "/demo/worker/index.html" },
+    { "source": "/demo/manager/", "destination": "/demo/manager/index.html" },
+    { "source": "/((?!demo/(?:worker|manager)/).*)", "destination": "/" }
   ]
 }

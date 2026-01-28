@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Monitor, Smartphone, Check, Calendar, ArrowLeft } from 'lucide-react';
+import { ArrowRight, Monitor, Check, Calendar, ArrowLeft } from 'lucide-react';
 
 // ============================================================
 // CONFIGURATION - Update these values
@@ -15,8 +15,6 @@ const HUBSPOT_CONFIG = {
 // Demo URLs - update when ready
 const DEMO_CONFIG = {
   portalUrl: 'https://upliftportaldemo.netlify.app/',
-  appStoreUrl: '#', // Coming soon
-  playStoreUrl: '#', // Coming soon
   calendlyUrl: 'https://calendly.com/dazevedo-uplifthq/30min'
 };
 
@@ -41,6 +39,76 @@ const RisingULogo = ({ size = 40, color = "light" }) => {
     </Link>
   );
 };
+
+// Phone Frame component
+// Render iframe at real iPhone dimensions (375x812) then scale down to fit frame
+const IPHONE_W = 375;
+const IPHONE_H = 812;
+const FRAME_W = 300;
+const SCALE = FRAME_W / IPHONE_W; // ~0.8
+const FRAME_H = Math.round(IPHONE_H * SCALE);
+
+const PhoneFrame = ({ src, label, sublabel }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'white', marginBottom: '4px' }}>{label}</h3>
+    <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', marginBottom: '16px' }}>{sublabel}</p>
+    <div style={{
+      width: `${FRAME_W}px`,
+      height: `${FRAME_H}px`,
+      borderRadius: '44px',
+      border: '6px solid #334155',
+      background: '#000',
+      overflow: 'hidden',
+      position: 'relative',
+      boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
+    }}>
+      {/* Notch */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '120px',
+        height: '28px',
+        background: '#000',
+        borderRadius: '0 0 16px 16px',
+        zIndex: 10
+      }} />
+      {/* Scaled iframe wrapper */}
+      <div style={{
+        width: `${IPHONE_W}px`,
+        height: `${IPHONE_H}px`,
+        transform: `scale(${SCALE})`,
+        transformOrigin: 'top left',
+        borderRadius: '38px',
+        overflow: 'hidden'
+      }}>
+        <iframe
+          src={src}
+          title={label}
+          style={{
+            width: `${IPHONE_W}px`,
+            height: `${IPHONE_H}px`,
+            border: 'none'
+          }}
+          allow="clipboard-write"
+        />
+      </div>
+      {/* Home indicator */}
+      <div style={{
+        position: 'absolute',
+        bottom: '8px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100px',
+        height: '4px',
+        background: 'rgba(255,255,255,0.3)',
+        borderRadius: '2px',
+        zIndex: 10
+      }} />
+    </div>
+  </div>
+);
 
 export default function DemoPage() {
   const [email, setEmail] = useState('');
@@ -247,7 +315,7 @@ export default function DemoPage() {
           </div>
         ) : (
           /* Access Granted View */
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
             {/* Success Header */}
             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
               <div style={{
@@ -269,227 +337,116 @@ export default function DemoPage() {
                 color: 'white',
                 marginBottom: '12px'
               }}>
-                You're in.
+                See What Your Team Will Experience
               </h1>
 
               <p style={{
                 fontSize: '18px',
-                color: 'rgba(255,255,255,0.7)'
+                color: 'rgba(255,255,255,0.6)',
+                maxWidth: '600px',
+                margin: '0 auto'
               }}>
-                We've sent a copy to {submittedEmail}
+                63% leave because they can't see a future. This is how you show them one.
               </p>
             </div>
 
-            {/* Product Cards - 3 cards: Head Office Portal, Manager App, Worker App */}
+            {/* Head Office Portal Card */}
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '20px',
-              marginBottom: '32px'
+              maxWidth: '480px',
+              margin: '0 auto 48px',
+              background: '#1E293B',
+              borderRadius: '20px',
+              padding: '28px',
+              border: '1px solid #334155',
+              textAlign: 'center'
             }}>
-              {/* Head Office Portal Card */}
               <div style={{
-                background: '#1E293B',
-                borderRadius: '20px',
-                padding: '28px',
-                border: '1px solid #334155'
+                width: '52px',
+                height: '52px',
+                background: 'rgba(139, 92, 246, 0.15)',
+                borderRadius: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px'
               }}>
-                <div style={{
-                  width: '52px',
-                  height: '52px',
-                  background: 'rgba(139, 92, 246, 0.15)',
-                  borderRadius: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '16px'
-                }}>
-                  <Monitor size={26} color="#8B5CF6" />
-                </div>
-
-                <h3 style={{
-                  fontSize: '20px',
-                  fontWeight: 600,
-                  color: 'white',
-                  marginBottom: '8px'
-                }}>
-                  Head Office Portal
-                </h3>
-
-                <p style={{
-                  fontSize: '14px',
-                  color: 'rgba(255,255,255,0.6)',
-                  marginBottom: '20px',
-                  lineHeight: 1.5
-                }}>
-                  AI scheduling, demand forecasting, analytics
-                </p>
-
-                <a
-                  href={DEMO_CONFIG.portalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '12px 20px',
-                    background: '#8B5CF6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    cursor: 'pointer',
-                    marginBottom: '16px'
-                  }}
-                >
-                  Launch Portal <ArrowRight size={16} />
-                </a>
-
-                <div style={{
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  fontSize: '13px'
-                }}>
-                  <p style={{ color: '#A78BFA', margin: '0 0 4px', fontWeight: 500 }}>Demo credentials:</p>
-                  <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>{DEMO_CREDENTIALS.admin.email}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{DEMO_CREDENTIALS.admin.password}</p>
-                </div>
+                <Monitor size={26} color="#8B5CF6" />
               </div>
 
-              {/* Manager App Card */}
-              <div style={{
-                background: '#1E293B',
-                borderRadius: '20px',
-                padding: '28px',
-                border: '1px solid #334155'
+              <h3 style={{
+                fontSize: '20px',
+                fontWeight: 600,
+                color: 'white',
+                marginBottom: '8px'
               }}>
-                <div style={{
-                  width: '52px',
-                  height: '52px',
-                  background: 'rgba(59, 130, 246, 0.15)',
-                  borderRadius: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '16px'
-                }}>
-                  <Smartphone size={26} color="#3B82F6" />
-                </div>
+                Head Office Portal
+              </h3>
 
-                <h3 style={{
-                  fontSize: '20px',
-                  fontWeight: 600,
-                  color: 'white',
-                  marginBottom: '8px'
-                }}>
-                  Manager App
-                </h3>
-
-                <p style={{
-                  fontSize: '14px',
-                  color: 'rgba(255,255,255,0.6)',
-                  marginBottom: '20px',
-                  lineHeight: 1.5
-                }}>
-                  Approvals, team view, floor management
-                </p>
-
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                  <span style={{
-                    padding: '12px 16px',
-                    background: '#334155',
-                    color: 'rgba(255,255,255,0.5)',
-                    border: 'none',
-                    borderRadius: '10px',
-                    fontSize: '13px',
-                    fontWeight: 500
-                  }}>
-                    Coming Soon
-                  </span>
-                </div>
-
-                <div style={{
-                  background: 'rgba(59, 130, 246, 0.1)',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  fontSize: '13px'
-                }}>
-                  <p style={{ color: '#60A5FA', margin: '0 0 4px', fontWeight: 500 }}>Demo credentials:</p>
-                  <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>{DEMO_CREDENTIALS.manager.email}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{DEMO_CREDENTIALS.manager.password}</p>
-                </div>
-              </div>
-
-              {/* Worker App Card */}
-              <div style={{
-                background: '#1E293B',
-                borderRadius: '20px',
-                padding: '28px',
-                border: '1px solid #334155'
+              <p style={{
+                fontSize: '14px',
+                color: 'rgba(255,255,255,0.6)',
+                marginBottom: '20px',
+                lineHeight: 1.5
               }}>
-                <div style={{
-                  width: '52px',
-                  height: '52px',
-                  background: 'rgba(255, 107, 53, 0.15)',
-                  borderRadius: '14px',
-                  display: 'flex',
+                AI scheduling, demand forecasting, analytics
+              </p>
+
+              <a
+                href={DEMO_CONFIG.portalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '16px'
-                }}>
-                  <Smartphone size={26} color="#FF6B35" />
-                </div>
-
-                <h3 style={{
-                  fontSize: '20px',
-                  fontWeight: 600,
+                  gap: '8px',
+                  padding: '12px 20px',
+                  background: '#8B5CF6',
                   color: 'white',
-                  marginBottom: '8px'
-                }}>
-                  Worker App
-                </h3>
-
-                <p style={{
+                  border: 'none',
+                  borderRadius: '10px',
                   fontSize: '14px',
-                  color: 'rgba(255,255,255,0.6)',
-                  marginBottom: '20px',
-                  lineHeight: 1.5
-                }}>
-                  Schedules, skills, career paths
-                </p>
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                  marginBottom: '16px'
+                }}
+              >
+                Launch Portal <ArrowRight size={16} />
+              </a>
 
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                  <span style={{
-                    padding: '12px 16px',
-                    background: '#334155',
-                    color: 'rgba(255,255,255,0.5)',
-                    border: 'none',
-                    borderRadius: '10px',
-                    fontSize: '13px',
-                    fontWeight: 500
-                  }}>
-                    Coming Soon
-                  </span>
-                </div>
-
-                <div style={{
-                  background: 'rgba(255, 107, 53, 0.1)',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  fontSize: '13px'
-                }}>
-                  <p style={{ color: '#FF6B35', margin: '0 0 4px', fontWeight: 500 }}>Demo credentials:</p>
-                  <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>{DEMO_CREDENTIALS.worker.email}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{DEMO_CREDENTIALS.worker.password}</p>
-                </div>
+              <div style={{
+                background: 'rgba(139, 92, 246, 0.1)',
+                borderRadius: '8px',
+                padding: '12px',
+                fontSize: '13px'
+              }}>
+                <p style={{ color: '#A78BFA', margin: '0 0 4px', fontWeight: 500 }}>Demo credentials:</p>
+                <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>{DEMO_CREDENTIALS.admin.email}</p>
+                <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0 }}>{DEMO_CREDENTIALS.admin.password}</p>
               </div>
             </div>
 
-            {/* Book a Call CTA */}
+            {/* Phone Frames - Worker & Manager */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '48px',
+              flexWrap: 'wrap',
+              marginBottom: '48px'
+            }}>
+              <PhoneFrame
+                src="/demo/worker/index.html?demo=true"
+                label="Worker App"
+                sublabel="Sarah Mitchell, Senior Server"
+              />
+              <PhoneFrame
+                src="/demo/manager/index.html?demo=true"
+                label="Manager App"
+                sublabel="James Wilson, Floor Manager"
+              />
+            </div>
+
+            {/* PoV CTA */}
             <div style={{
               textAlign: 'center',
               padding: '40px',
@@ -503,7 +460,7 @@ export default function DemoPage() {
                 color: 'white',
                 marginBottom: '12px'
               }}>
-                Want a guided walkthrough?
+                Ready to see how Uplift fits your business?
               </h3>
 
               <p style={{
@@ -511,7 +468,7 @@ export default function DemoPage() {
                 color: 'rgba(255,255,255,0.6)',
                 marginBottom: '24px'
               }}>
-                See how Uplift can work for your specific team
+                Book a Proof of Value session and we'll configure Uplift for your workforce
               </p>
 
               <a
@@ -533,7 +490,7 @@ export default function DemoPage() {
                   cursor: 'pointer'
                 }}
               >
-                <Calendar size={20} /> Book a 15-min Call
+                <Calendar size={20} /> Request 14-Day Proof of Value
               </a>
             </div>
           </div>
